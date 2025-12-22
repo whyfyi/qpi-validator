@@ -1,0 +1,40 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,amsthm,hyperref}
+
+\title{QPI and Twin Primes: A Geometric Reframing (Conjectures + Evidence)}
+\author{Christopher Michael LeBlanc Sr.}
+\date{\today}
+
+\newtheorem{conjecture}{Conjecture}
+\newtheorem{definition}{Definition}
+\newtheorem{remark}{Remark}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This paper separates proven structural equivalences from open problems.
+It frames twin primes via midpoint predicates (Yellow/Red) and records
+finite computational evidence, while leaving all infinite claims explicitly conjectural.
+\end{abstract}
+
+\section{Midpoint framing}
+Define Yellow and Red as in Paper 1. For $p>5$, any twin prime pair $(p,p+2)$
+has midpoint $m=p+1$ divisible by $3$ and ending in $0,2,$ or $8$; thus $m$ lies in the Yellow set.
+The pair is twin iff $m$ is Red.
+
+\section{What remains open}
+\begin{conjecture}[Twin Prime Conjecture]
+There exist infinitely many twin primes.
+\end{conjecture}
+
+\begin{remark}
+Any argument of the form ``Yellow is infinite, therefore Red is infinite'' must introduce
+a new mechanism that forces infinitely many Yellow midpoints to have both prime neighbors.
+No such mechanism is proven here.
+\end{remark}
+
+\section{Empirical evidence}
+Include receipts up to the maximum validated bound, including SHA-256 hashes and hardware specs.
+
+\end{document}

@@ -1,0 +1,13 @@
+{
+  "N": 10000000,
+  "checksum_sha256": "41f75c003541e043e7bfba905cae5952d42832c141bb945a4d8fa08171179dca",
+  "count_seconds": 2.3834338188171387,
+  "diff_red_minus_twins_all": -2,
+  "diff_red_minus_twins_pge7": 0,
+  "red_cells": 58978,
+  "sieve_seconds": 0.7433826923370361,
+  "timestamp_utc": "2025-12-21T15:53:07.725041Z",
+  "total_seconds": 3.126816511154175,
+  "twin_pairs": 58980,
+  "twin_pairs_p_ge_7": 58978
+}

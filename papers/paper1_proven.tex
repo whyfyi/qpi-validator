@@ -1,0 +1,64 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb,amsthm,hyperref}
+
+\title{QPI Sieve: A Prime Classification Algorithm with Receipts}
+\author{Christopher Michael LeBlanc Sr.}
+\date{\today}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
+\newtheorem{remark}{Remark}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+This paper documents a prime classification framework (QPI) and provides
+reproducible computational receipts verifying the Twin Prime Midpoint Law
+up to a finite bound $N$. All infinite-claim statements are explicitly
+labeled as conjectures and are not asserted as theorems.
+\end{abstract}
+
+\section{Definitions}
+\begin{definition}[Yellow]
+An integer $m$ is \emph{Yellow} iff $3 \mid m$ and the last digit of $m$ is in $\{0,2,8\}$.
+\end{definition}
+
+\begin{definition}[Red]
+An integer $m$ is \emph{Red} iff $m$ is Yellow and both $m-1$ and $m+1$ are prime.
+\end{definition}
+
+\begin{definition}[Twin prime]
+A \emph{twin prime pair} is $(p,p+2)$ where $p$ and $p+2$ are prime.
+\end{definition}
+
+\section{Twin Prime Midpoint Law (Finite, Checkable)}
+\begin{theorem}[Twin Prime Midpoint Law]
+For integers $p>5$, $p$ and $p+2$ are prime if and only if $m=p+1$ is Red.
+\end{theorem}
+
+\begin{remark}
+This theorem is an equivalence between:
+(i) twin primality and (ii) a midpoint predicate consisting of a modular filter (Yellow)
+plus neighbor primality. It does not imply an infinite number of twins.
+\end{remark}
+
+\section{Receipts}
+The repository includes JSON receipts and SHA-256 hashes for runs at:
+$N=10^6,10^7,10^8$. Each receipt records:
+\begin{itemize}
+\item \# twin pairs (all)
+\item \# twin pairs with $p\ge 7$
+\item \# red cells
+\item the diff $\#\text{red}-\#\text{twin}(p\ge 7)$
+\end{itemize}
+A passing receipt has diff $=0$.
+See \texttt{results/checksums.txt}.
+
+\section{Formalization}
+Lean 4 skeletons are provided in \texttt{lean/qpi\_theorems\_clean.lean}
+with placeholders marked \texttt{sorry}. The infinitude claim is a \texttt{conjecture}.
+
+\bibliographystyle{plain}
+\bibliography{refs}
+\end{document}
