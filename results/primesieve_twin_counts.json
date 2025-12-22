@@ -1,0 +1,20 @@
+{
+  "counts": {
+    "N=1e10": 27412679,
+    "N=1e12": 1870585220,
+    "N=1e9": 3424506
+  },
+  "cpu_info": [
+    "11th Gen Intel(R) Core(TM) i7-11700F @ 2.50GHz",
+    "Logical CPU cores: 16",
+    "L1 cache size: 48 KiB",
+    "L2 cache size: 512 KiB",
+    "L3 cache size: 16 MiB",
+    "L1 cache sharing: 2 threads",
+    "L2 cache sharing: 2 threads",
+    "L3 cache sharing: 16 threads"
+  ],
+  "generated_utc": "2025-12-22T08:39:15Z",
+  "mode": "-c2",
+  "tool": "primesieve"
+}
