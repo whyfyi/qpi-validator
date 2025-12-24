@@ -1,0 +1,14 @@
+{
+  "N": 10000000000,
+  "checksum_sha256": "45f2ccbdc7e7de50859d068e162eb287a4b726b21d86179b1ad168a4b4aff547",
+  "count_seconds": 1113.8487045764923,
+  "diff_red_minus_twins_p_ge_7": 0,
+  "midpoint_law_holds_for_p_ge_7": true,
+  "platform": "Linux-5.19.0-1010-nvidia-lowlatency-x86_64-with-glibc2.35",
+  "python": "3.12.2 | packaged by conda-forge | (main, Feb 16 2024, 20:50:58) [GCC 12.3.0]",
+  "red_cells": 27412677,
+  "sieve_seconds": 501.68497943878174,
+  "total_seconds": 1615.533684015274,
+  "twin_pairs": 27412679,
+  "twin_pairs_p_ge_7": 27412677
+}

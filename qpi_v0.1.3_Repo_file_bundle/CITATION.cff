@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+message: "If you use this software or receipts, please cite it."
+title: "QPI Validator"
+authors:
+  - family-names: "LeBlanc"
+    given-names: "Christopher Michael"
+    name-suffix: "Sr."
+    orcid: "https://orcid.org/0009-0001-3970-8781"
+version: "0.1.3"
+date-released: "2025-12-22"
+license: "All Rights Reserved"
+repository-code: "https://github.com/whyfyi/qpi-validator"

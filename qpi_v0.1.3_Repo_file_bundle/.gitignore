@@ -1,0 +1,13 @@
+# secrets
+*token*
+*.pat
+*.key
+.env
+
+# python
+__pycache__/
+*.pyc
+
+# large local outputs
+results/*.tmp
+results/*.bin
