@@ -1,0 +1,64 @@
+name: primesieve receipts (twin primes)
+
+on:
+  workflow_dispatch:
+    inputs:
+      N:
+        description: "Upper bound N (e.g. 1000000000000 for 1e12)"
+        required: true
+        default: "1000000000000"
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install primesieve
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y primesieve-bin
+
+      - name: Run primesieve twin-prime count receipt
+        run: |
+          set -euo pipefail
+          N="${{ github.event.inputs.N }}"
+          mkdir -p results /tmp
+
+          primesieve --cpu-info > /tmp/cpu_info.txt
+          primesieve -c2 1 "$N" | tail -n 1 > /tmp/twins.txt
+
+          python3 - << 'PY'
+import json, time, pathlib
+
+N = int("${{ github.event.inputs.N }}")
+cpu = pathlib.Path("/tmp/cpu_info.txt").read_text().splitlines()
+tw_line = pathlib.Path("/tmp/twins.txt").read_text().strip()
+tw = int(tw_line.split(":")[1].strip())
+
+out = {
+  "tool": "primesieve",
+  "mode": "-c2",
+  "N": N,
+  "twin_primes_count": tw,
+  "generated_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+  "cpu_info": cpu,
+}
+
+path = pathlib.Path(f"results/primesieve_twin_count_{N}.json")
+path.write_text(json.dumps(out, indent=2) + "\n")
+print("WROTE:", path)
+PY
+
+          sha256sum results/primesieve_twin_count_"$N".json > results/primesieve_twin_count_"$N".sha256
+          echo "SHA256:"
+          cat results/primesieve_twin_count_"$N".sha256
+
+      - name: Upload receipt artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: primesieve-receipts
+          path: |
+            results/primesieve_twin_count_*.json
+            results/primesieve_twin_count_*.sha256
