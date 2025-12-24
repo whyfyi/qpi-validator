@@ -20,39 +20,11 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y primesieve-bin
 
-      - name: Run primesieve twin-prime count receipt
-        env:
-          N: ${{ inputs.N }}
+      - name: Generate receipt
         run: |
           set -euo pipefail
-          mkdir -p results /tmp
-
-          primesieve --cpu-info > /tmp/cpu_info.txt
-          primesieve -c2 1 "$N" | tail -n 1 > /tmp/twins.txt
-
-          python3 - <<'PY'
-import json, time, pathlib, os
-
-N = int(os.environ["N"])
-cpu = pathlib.Path("/tmp/cpu_info.txt").read_text().splitlines()
-tw_line = pathlib.Path("/tmp/twins.txt").read_text().strip()
-tw = int(tw_line.split(":")[1].strip())
-
-out = {
-  "tool": "primesieve",
-  "mode": "-c2",
-  "N": N,
-  "twin_primes_count": tw,
-  "generated_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
-  "cpu_info": cpu,
-}
-
-path = pathlib.Path(f"results/primesieve_twin_count_{N}.json")
-path.write_text(json.dumps(out, indent=2) + "\n")
-print("WROTE:", path)
-PY
-
-          sha256sum "results/primesieve_twin_count_${N}.json" | tee "results/primesieve_twin_count_${N}.sha256"
+          N="${{ inputs.N }}"
+          python3 scripts/primesieve_receipt.py "$N"
 
       - name: Upload receipt artifacts
         uses: actions/upload-artifact@v4
