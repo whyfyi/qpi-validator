@@ -4,32 +4,41 @@ on:
   workflow_dispatch:
     inputs:
       N:
-        description: "Upper bound N (e.g. 1000000000000 for 1e12)"
+        description: "Upper bound N (e.g., 1000000000000 for 1e12)"
         required: true
-        default: "1000000000000"
+        default: "1000000000"
+        type: string
 
 jobs:
-  run:
+  primesieve_receipt:
     runs-on: ubuntu-latest
+    timeout-minutes: 360
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
       - name: Install primesieve
         run: |
           sudo apt-get update
-          sudo apt-get install -y primesieve-bin
+          sudo apt-get install -y primesieve
 
       - name: Generate receipt
         run: |
           set -euo pipefail
-          N="${{ inputs.N }}"
-          python3 scripts/primesieve_receipt.py "$N"
+          python3 scripts/primesieve_receipt.py "${{ inputs.N }}"
+          ls -lah results | sed -n '1,200p'
 
       - name: Upload receipt artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: primesieve-receipt-${{ inputs.N }}
+          name: primesieve_twin_count_${{ inputs.N }}
           path: |
-            results/primesieve_twin_count_*.json
-            results/primesieve_twin_count_*.sha256
+            results/primesieve_twin_count_${{ inputs.N }}.json
+            results/primesieve_twin_count_${{ inputs.N }}.sha256
+          if-no-files-found: error
