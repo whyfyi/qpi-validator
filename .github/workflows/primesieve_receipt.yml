@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       N:
-        description: "Upper bound N (e.g., 1000000000000 for 1e12)"
+        description: "Upper bound N (digits only, e.g. 1000000000000 for 1e12)"
         required: true
         default: "1000000000"
         type: string
@@ -28,7 +28,7 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y primesieve
 
-      - name: Generate receipt
+      - name: Generate receipt (repo script)
         run: |
           set -euo pipefail
           python3 scripts/primesieve_receipt.py "${{ inputs.N }}"
