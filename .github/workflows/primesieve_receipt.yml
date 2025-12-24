@@ -30,7 +30,7 @@ jobs:
           primesieve --cpu-info > /tmp/cpu_info.txt
           primesieve -c2 1 "$N" | tail -n 1 > /tmp/twins.txt
 
-          python3 - <<'PY'
+          python3 - <<'PYCODE'
 import json, time, pathlib, os
 
 N = int(os.environ["N"])
@@ -39,18 +39,18 @@ tw_line = pathlib.Path("/tmp/twins.txt").read_text().strip()
 tw = int(tw_line.split(":")[1].strip())
 
 out = {
-  "tool": "primesieve",
-  "mode": "-c2",
-  "N": N,
-  "twin_primes_count": tw,
-  "generated_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
-  "cpu_info": cpu,
-}
+            "tool": "primesieve",
+            "mode": "-c2",
+            "N": N,
+            "twin_primes_count": tw,
+            "generated_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+            "cpu_info": cpu,
+          }
 
 path = pathlib.Path(f"results/primesieve_twin_count_{N}.json")
 path.write_text(json.dumps(out, indent=2) + "\n")
 print("WROTE:", path)
-PY
+PYCODE
 
           sha256sum "results/primesieve_twin_count_${N}.json" > "results/primesieve_twin_count_${N}.sha256"
           echo "SHA256:"
