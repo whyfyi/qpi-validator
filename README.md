@@ -22,11 +22,27 @@ For a chosen bound **N**, `python/qpi_validate.py` produces `results/validation_
 - `results/validation_1000000000.json`
 
 ### B) Independent twin-prime count receipts (primesieve)
-`primesieve` is an external, highly-optimized sieve tool. This repo records its output as an **independent baseline**:
+`primesieve` is an external, highly-optimized sieve tool. This repo records its output as an **independent baseline**.
 
 - `results/primesieve_twin_counts.json` (counts for 1e9, 1e10, 1e12 + CPU info)
 
 This does **not** prove infinity; it provides a fast, verifiable count baseline.
+
+#### Primesieve 1e12 receipt (GitHub Actions)
+
+A full twin-prime count to **N = 1e12** was generated on neutral infrastructure and recorded as a reproducible receipt:
+
+- Tool: `primesieve`
+- Mode: twin-prime count (`-c2`)
+- Upper bound: `1000000000000`
+- Runner: GitHub Actions (`ubuntu-latest`)
+- Generated (UTC): `2025-12-24`
+- Receipt: `results/primesieve_twin_count_1000000000000.json`
+- Integrity: verified via `results/checksums.txt` (SHA-256)
+
+This receipt was produced via a manual `workflow_dispatch` run using the canonical
+`.github/workflows/primesieve_receipt_dispatch.yml` workflow. Anyone can reproduce
+the run or independently verify the hash without trusting the authors.
 
 ---
 
@@ -61,79 +77,4 @@ The authoritative hashes live in:
 Rebuild canonically:
 ```bash
 bash scripts/rebuild_checksums.sh
-```
 
-Verify all receipts:
-```bash
-sha256sum results/*.json
-# compare to results/checksums.txt
-```
-
----
-
-## Reproduce: QPI validator (finite N)
-```bash
-python3 python/qpi_validate.py --N 1000000000 --out results/validation_1000000000.json
-sha256sum results/validation_1000000000.json
-```
-
----
-
-## Reproduce: primesieve twin-prime counts
-Install (Ubuntu/Debian):
-```bash
-sudo apt update
-sudo apt install -y primesieve-bin
-```
-
-Count twin primes (examples):
-```bash
-time primesieve -c2 1 1000000000
-time primesieve -c2 1 10000000000
-time primesieve -c2 1 1000000000000
-```
-
-Write receipt JSON (example script):
-```bash
-bash scripts/make_primesieve_receipt.sh
-```
-
----
-
-## Why primesieve is included (12th-grade explanation)
-- Your QPI validator tests a specific rule by checking lots of numbers.
-- Checking “is prime?” repeatedly can get slow at huge N.
-- `primesieve` is optimized C++ sieving code designed exactly for large prime/twin-prime counting.
-- So `primesieve` acts like an **independent measuring tool**:
-  - QPI validator proves the rule holds up to a finite bound,
-  - primesieve provides fast, verifiable twin-prime counts to large N as an external baseline.
-
----
-
-## Repo layout
-```
-qpi_validator_repo/
-├── assets/                        # PNG visuals (spiral/helix)
-├── docs/                          # extra documentation from bundle
-├── lean/                          # Lean 4 theorem skeletons
-├── papers/                        # PDF papers
-├── python/                         # Python validator
-├── results/                        # JSON receipts + checksums.txt
-├── scripts/                        # helper scripts (checksums, primesieve receipt)
-└── src/                            # Rust experiments (optional)
-```
-
----
-
-## Security note (token hygiene)
-Never store any GitHub token (PAT) inside this repo. If a token is ever committed, revoke it immediately.
-
----
-
-## Citation
-See `CITATION.cff` for machine-readable citation metadata.
-
----
-
-## License
-See `LICENSE.txt`.

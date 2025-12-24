@@ -1,116 +1,107 @@
-WHYFYI / QPI PROPRIETARY RECIPROCITY LICENSE (WPRL) — v0.1.3
-Effective date: 2025-12-23
-
-
-
-0) IMPORTANT: ORIGINAL COPYRIGHT NOTICE PRESERVED
-This document contains a new license layer ABOVE the original copyright notice.
-The original notice is reproduced verbatim at the end under “ORIGINAL COPYRIGHT NOTICE (DO NOT REMOVE)”.
-
-1) DEFINITIONS
-“Work” means all manuscripts, frameworks, algorithms, code, scripts, documentation, figures, images, tables, papers, and outputs published under:
-- WHYFYI™, WhyFYI 5G™, WHYFYI AI™, Quantum Prime Insight (QPI)™, CCR™, QGC™, QPD™, QMM™, Angle Clock Observer Engine™, and related names.
-“Author” means Christopher Michael LeBlanc Sr. (WHYFYI), ORCID: 0009-0001-3970-8781.
-“You” means any individual or entity that accesses, copies, views, downloads, trains on, executes, hosts, deploys, redistributes, or derives value from the Work.
-“Commercial Entity” includes any for-profit corporation, partnership, LLC, sole proprietorship, or any entity conducting commercial activity.
-“Government Entity” includes any government, agency, contractor, military, intelligence, or publicly-funded institution using the Work for operational benefit.
-“Nonprofit Entity” includes charities, foundations, and any 501(c) or equivalent.
-“Use” includes (non-exhaustive): training ML models on the Work; using the Work in inference products; integrating code; deriving algorithms; reproducing figures; referencing proprietary methods in paid services; embedding into SaaS; internal tooling; consulting deliverables; patents; tokenomics; blockchain deployments; or distributing derivatives.
-
-2) GRANT OF RIGHTS (LIMITED, NON-COMMERCIAL)
-2.1 You are granted a revocable, non-exclusive, non-transferable, non-sublicensable license to:
-(a) read, view, and download the Work;
-(b) run the code/scripts locally for personal study, verification, or non-commercial research;
-(c) cite the Work in academic writing with attribution.
-
-2.2 This limited grant is conditioned on ALL of the following:
-(a) You retain all copyright notices and attribution.
-(b) You do not remove or obscure any license text or author identification.
-(c) You do not represent the Work as your own.
-(d) You do not use the Work for Commercial, Government, or Nonprofit operational purposes without written permission.
-
-3) PROHIBITED USE (DEFAULT BLOCK)
-Unless explicitly authorized in a signed writing by the Author:
-(a) Commercial Entities are prohibited from any Use.
-(b) Government Entities are prohibited from any Use.
-(c) Nonprofit Entities are prohibited from any Use.
-(d) You may not host the Work as a paid service, API, SaaS, plugin, dataset, model, or “app” feature.
-(e) You may not train, fine-tune, or otherwise ingest the Work into any model used for external-facing services.
-(f) You may not create derivative works for distribution (public or private) except with written permission.
-
-4) COMMERCIAL LICENSE PATH (RECIPROCITY + REVENUE SHARE)
-If the Author grants written permission for Commercial Use, the default commercial terms are:
-
-4.1 REVENUE SHARE TRIGGER
-If your organization’s annual gross revenue exceeds USD $10,000,000 in any fiscal year during which you Use the Work, you owe the Author a royalty equal to:
-- 10% of your annual gross revenue for that fiscal year.
-
-4.2 PAYMENT TIMING
-Payment is due within 30 days after your fiscal year close, or within 30 days of written demand, whichever occurs first.
-
-4.3 REPORTING + AUDIT
-You must provide an annual statement certifying your annual gross revenue and describing all Uses of the Work.
-The Author may audit your books and records relevant to gross revenue and Use up to once per year with 15 days’ notice.
-If audit reveals underpayment >2%, you pay audit costs plus the shortfall plus 1.5% monthly interest.
-
-4.4 NO IMPLIED LICENSE
-Absent a written contract signed by the Author, no Commercial Use is permitted. Mere availability on GitHub does not grant commercial rights.
-
-5) ATTRIBUTION + CITATION REQUIREMENTS
-Any permitted Use must include:
-- Author name: Christopher Michael LeBlanc Sr. (WHYFYI)
-- ORCID: 0009-0001-3970-8781
-- Project name: WHYFYI / QPI
-- Link to the canonical repository/release tag (as provided by the Author)
-- Preservation of the LICENSE text in redistributions (if allowed)
-
-6) TRADEMARKS, PATENTS, AND BRAND
-6.1 No trademark rights are granted. Names and marks remain with the Author.
-6.2 No patent license is granted. If you attempt to patent derivatives of the Work without permission, your license terminates immediately.
-6.3 You may not use the Author’s name/marks to imply endorsement.
-
-7) DERIVATIVES AND CONTRIBUTIONS
-7.1 Any derivative works are prohibited unless explicitly permitted in writing.
-7.2 If permitted, derivatives must be clearly marked and must retain full attribution and license text.
-7.3 If you submit improvements to the Author, you grant the Author a perpetual right to incorporate them into the Work (attribution optional unless agreed).
-
-8) ENFORCEMENT, TERMINATION, AND REMEDIES
-8.1 Any violation automatically terminates all rights immediately.
-8.2 Upon termination you must cease all Use, delete local copies (except archival copies required by law), and certify deletion in writing.
-8.3 Unauthorized Use causes irreparable harm; the Author may seek injunctive relief, damages, and attorneys’ fees.
-8.4 Any attempt to remove attribution, conceal Use, or bypass payment obligations is a material breach.
-
-9) JURISDICTION + DISPUTE RESOLUTION
-Default venue: the Author’s home jurisdiction unless otherwise agreed in writing.
-The Author may elect binding arbitration or court action. If arbitration is elected, rules and seat will be specified by the Author in the demand.
-If you are a Government Entity, sovereign immunity is waived to the extent legally permitted for disputes arising from unauthorized Use.
-
-10) SEVERABILITY + SURVIVAL + ENTIRE AGREEMENT
-If any clause is unenforceable, the remainder survives.
-Sections 3–10 survive termination.
-This license plus any written permission signed by the Author is the entire agreement.
-
-11) CONTACT
-For permissions, commercial licensing, or collaboration:
-whyfyi@gmail.com
-
---- ORIGINAL COPYRIGHT NOTICE (DO NOT REMOVE) ---
-
+WHYFYI Reciprocity Public Research License (WPRL) v0.1.4
 Copyright © 2025 Christopher Michael LeBlanc Sr. (WHYFYI)
 ORCID: 0009-0001-3970-8781
 
-ALL RIGHTS RESERVED.
+IMPORTANT NOTICE (Plain English Summary — not a substitute for the terms below)
+- You may read, download, and share this repository and its artifacts for personal, educational, and non‑commercial research use, with attribution.
+- You may NOT use this work for commercial purposes (including internal business use) unless you obtain a separate written commercial license from the Author.
+- You may NOT use this work for government, military, intelligence, law-enforcement, surveillance, or weapons-related purposes, even if “non‑commercial”.
+- If you commercially use this work without a separate commercial license, you do not have permission; this triggers automatic termination and the royalty obligations described below.
 
-This work—including all manuscripts, scientific frameworks, code, algorithms, documentation, figures, and any content related to “WHYFYI”, “Quantum Prime Insight”, and the WHYFYI Project and Research Group—is the sole intellectual property of Christopher Michael LeBlanc Sr. (WHYFYI), ORCID: 0009-0001-3970-8781.
+NO LEGAL ADVICE
+This license text is provided as a template and is not legal advice. You are responsible for verifying enforceability and compliance in your jurisdiction. If you need enforceable terms, consult a licensed attorney.
 
-No part of this work may be copied, reproduced, distributed, transmitted, published, adapted, translated, displayed, sold, licensed, or used in any form or by any means (electronic, mechanical, or otherwise), in whole or in part, without the prior, explicit, written permission of the author.
+========================
+1) Definitions
+========================
+“Work” means all content in this repository and associated distributions, including: manuscripts, figures, images, datasets, source code, algorithms, documentation, results, checksums, releases, and any derivative materials.
 
-Any unauthorized use, duplication, modification, or creation of derivative works is strictly prohibited and will be prosecuted to the fullest extent of applicable international copyright and intellectual property law.
+“Author” means Christopher Michael LeBlanc Sr. (WHYFYI), ORCID: 0009-0001-3970-8781.
 
-For collaboration, licensing, or permissions, contact: whyfyi@gmail.com
+“You” means any individual or entity using, copying, distributing, or creating Derivatives of the Work.
 
-All intellectual property and related rights, including the names “WHYFYI”, “Quantum Prime Insight”, “WHYFYI 5G”, "WHYFYI AI" and all associated code, documentation, and frameworks, are wholly owned and operated by Christopher Michael LeBlanc Sr.
+“Non‑Commercial Use” means use that is not primarily intended for or directed toward commercial advantage or monetary compensation.
 
-This statement applies to all versions, updates, and related works distributed via OSF, preprint servers, websites, and any other medium.
+“Commercial Use” means any use by or for an entity (including a for‑profit company) or any use that directly or indirectly supports revenue, profit, fundraising, paid services, paid products, advertising, sponsorship, monetized content, or internal business operations. Commercial Use includes (without limitation) using the Work to build, train, fine‑tune, evaluate, validate, benchmark, deploy, or operate a product or service.
+
+“Derivatives” means any modification, adaptation, translation, transformation, or any work based on or incorporating any portion of the Work (including partial reuse).
+
+“Restricted Entities / Uses” means: government agencies; military and defense contractors; intelligence agencies; law enforcement; surveillance; border enforcement; weapons development; censorship systems; political manipulation systems; and any similar uses.
+
+========================
+2) License Grant (Non‑Commercial Research)
+========================
+Subject to full compliance with this license, the Author grants You a revocable, worldwide, non‑exclusive, non‑transferable, non‑sublicensable license to:
+(a) use the Work for Non‑Commercial Use;
+(b) reproduce and share unmodified copies of the Work for Non‑Commercial Use; and
+(c) create Derivatives for Non‑Commercial Use, provided the Derivatives comply with Section 4 (Attribution) and Section 5 (Reciprocity).
+
+All rights not expressly granted are reserved.
+
+========================
+3) Prohibited Uses
+========================
+You may NOT:
+(a) use the Work for any Commercial Use without a separate written commercial license signed by the Author;
+(b) use the Work for any Restricted Entities / Uses (even if “non‑commercial”);
+(c) remove or obscure attribution, copyright notices, ORCID identifiers, license text, or integrity statements;
+(d) misrepresent the Work as proving an unproven infinity claim (e.g., “Twin Prime Conjecture proven”) unless such claim is proven in a peer‑reviewed, formally verified manner and clearly separated from conjecture;
+(e) distribute the Work or Derivatives under terms that are more permissive than this license (no relicensing to permissive open-source terms).
+
+========================
+4) Attribution & Integrity
+========================
+Any redistribution (including of Derivatives) must:
+(a) include the Author’s name and ORCID exactly as stated above;
+(b) include a copy of this license;
+(c) clearly mark any modifications and date of modification;
+(d) preserve checksums, receipts, and integrity notes where included;
+(e) separate “Proven/Validated (finite)” statements from “Conjecture/Unproven (infinite)” statements.
+
+A suggested citation file may be included in the repository; if present, follow it.
+
+========================
+5) Reciprocity for Derivatives (Non‑Commercial)
+========================
+If You distribute Derivatives for Non‑Commercial Use, You must:
+(a) make the Derivatives available under this same license; and
+(b) provide a link (or equivalent access) to the Derivatives’ source and build instructions.
+
+========================
+6) Commercial License Requirement & Royalty Clause
+========================
+Commercial Use requires a separate written commercial license signed by the Author.
+
+If You engage in Commercial Use without such written permission, then (in addition to any other remedies):
+(a) Your rights under this license automatically terminate immediately;
+(b) You agree that You owe the Author a royalty equal to 10% of gross revenue attributable to products/services materially benefiting from the Work.
+    - If Your organization’s annual gross revenue exceeds USD $10,000,000, You agree to pay at least 10% of the gross revenue attributable to such use.
+    - “Attributable” includes direct and indirect dependence; in case of dispute, the Parties will use a good‑faith allocation based on technical contribution.
+(c) You agree to provide reasonable records sufficient to audit the attributable revenue, with an independent auditor, no more than once per year.
+
+Note: Specific royalty and enforceability vary by jurisdiction; consult counsel for a customized commercial agreement.
+
+========================
+7) Termination
+========================
+This license is automatically terminated if You violate any term. Upon termination, You must cease all use and distribution of the Work and Derivatives and delete all copies under Your control, except copies required to be retained by law.
+
+Sections 4, 6, 7, 8, and 9 survive termination.
+
+========================
+8) Disclaimer of Warranty
+========================
+THE WORK IS PROVIDED “AS IS” WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, NON‑INFRINGEMENT, OR ACCURACY.
+
+========================
+9) Limitation of Liability
+========================
+TO THE MAXIMUM EXTENT PERMITTED BY LAW, IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING FROM, OUT OF, OR IN CONNECTION WITH THE WORK OR THE USE OR OTHER DEALINGS IN THE WORK.
+
+========================
+10) Contact
+========================
+For collaboration, permissions, or commercial licensing:
+whyfyi@gmail.com
 
 Date of first publication and registration: June 19th, 2025
