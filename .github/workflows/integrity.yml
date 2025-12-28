@@ -1,0 +1,31 @@
+name: integrity
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  integrity:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Verify checksums for results/*.json
+        run: |
+          set -euo pipefail
+          sha256sum -c results/checksums.txt
+
+      - name: Ensure every results/*.json is listed in results/checksums.txt
+        run: |
+          set -euo pipefail
+          missing=0
+          # List all JSON receipts tracked in results/
+          for f in $(ls -1 results/*.json | sort); do
+            if ! grep -Fq " $f" results/checksums.txt; then
+              echo "::error::Missing checksum entry for $f"
+              missing=1
+            fi
+          done
+          test "$missing" -eq 0
+
