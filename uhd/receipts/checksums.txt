@@ -1,0 +1,2 @@
+172cc1dc5ea6ca7979841af16e69b0d3cf78b32e2284818f7e026af47cbd06d2  uhd/receipts/uqhd_anchor_map_1e13.json
+ec58f742286fe76bb57f6708650ac7abc314adc5429ff28057eb91eeb7b2f285  uhd/receipts/uqhd_anchor_map_1e13.sha256

@@ -1,0 +1,162 @@
+{
+  "uqhd_memory_prompt": {
+    "receipt_metadata": {
+      "type": "memory_prompt_spec",
+      "schema_version": "uqhd.v0.1",
+      "created_utc": "2025-12-29T15:12:58Z",
+      "repository_context": {
+        "repo": "whyfyi/qpi-validator",
+        "canonical_release": "v1.1.0-1e13",
+        "release_url": "https://github.com/whyfyi/qpi-validator/releases/tag/v1.1.0-1e13",
+        "notes": "This spec references empirical receipts in qpi-validator/results/ but does not modify them."
+      }
+    },
+    "governance": {
+      "truth_policy": {
+        "validated_receipts_only": "Any claim marked as 'validated' must point to a verifiable receipt (hash, file path, run id, or reproducible command).",
+        "models_vs_facts": [
+          "Statements under 'models' are OS-internal hypotheses/metaphors and are not asserted as external scientific fact.",
+          "Statements under 'validated' are only what the receipts directly support."
+        ]
+      },
+      "non_goals": [
+        "This spec does not claim to solve entropy, physics, or cryptography in the real world without external peer-reviewed evidence.",
+        "This spec does not claim compression beyond information-theoretic limits."
+      ]
+    },
+    "validated": {
+      "twin_prime_receipts": [
+        {
+          "n": 10000000000000,
+          "receipt_path": "results/primesieve_twin_count_10000000000000.json",
+          "twin_prime_count": 15834664872,
+          "verification": {
+            "ledger": "results/checksums.txt",
+            "verify_cmd": "sha256sum -c results/checksums.txt"
+          }
+        }
+      ],
+      "runtime_observation_github_actions": {
+        "environment": "GitHub-hosted ubuntu runner (as used by primesieve receipts workflow)",
+        "measured_runs_seconds": [
+          {
+            "n": 1000000000000,
+            "seconds": 131.0
+          },
+          {
+            "n": 10000000000000,
+            "seconds": 1365.0
+          }
+        ],
+        "derived_multiplier_1e12_to_1e13": 10.419847328244275,
+        "rough_estimate_1e14_seconds": 14223.091603053435
+      }
+    },
+    "models": {
+      "uqhd_concept": {
+        "one_sentence": "Treat each verified anchor as an addressable checkpoint in an append-only ledger that can be used to validate streams, not magically compress them.",
+        "why_this_is_useful": [
+          "Anchors can provide integrity, provenance, and auditability (like a Merkle-backed log).",
+          "Anchors can be used as deterministic indices for chunking, sharding, and content-addressing."
+        ],
+        "what_this_is_not": [
+          "Not a claim that primes let you store 'more information' than the bits you physically write.",
+          "Not a claim of 'infinite compression'."
+        ]
+      },
+      "anchor_types": {
+        "twin_prime_anchor": {
+          "definition": "An anchor keyed by an index i and a twin-prime pair (p, p+2) discovered/verified within a declared bound N.",
+          "minimal_fields": [
+            "anchor_id",
+            "anchor_kind",
+            "p",
+            "p_plus_2",
+            "bound_n",
+            "source_receipt_ref"
+          ]
+        },
+        "angle_clock_anchor": {
+          "definition": "An anchor keyed by a discrete angular tick (e.g., 6° increments) that can be used to schedule or gate transitions in an algorithm.",
+          "minimal_fields": [
+            "anchor_id",
+            "anchor_kind",
+            "degrees",
+            "cycle_id",
+            "source_spec_ref"
+          ]
+        }
+      },
+      "bits_per_anchor": {
+        "default_bits": 256,
+        "interpretation": [
+          "This is a design knob: how many bits you assign to each anchor for indexing/commitment.",
+          "Example: 256-bit anchors map cleanly to SHA-256 sized commitments."
+        ],
+        "capacity_example_from_1e13_receipt": {
+          "n": 10000000000000,
+          "twin_prime_count": 15834664872,
+          "bits_per_anchor": 256,
+          "total_bits": 4053674207232,
+          "total_bytes": 506709275904,
+          "decimal_gb": 506.709275904,
+          "decimal_tb": 0.506709275904
+        }
+      }
+    },
+    "verification_design": {
+      "ledger": {
+        "rule": "All empirical artifacts live in results/ and are covered by results/checksums.txt.",
+        "constraints": [
+          "Do not rewrite historical receipts.",
+          "If a receipt is regenerated, it must be added as a new receipt with its own hash coverage."
+        ]
+      },
+      "merkle_root_optional": {
+        "purpose": "Allow a single commitment to a set of receipts or chunks.",
+        "note": "Not currently implemented in qpi-validator; proposed extension.",
+        "suggested_fields": [
+          "merkle_root_sha256",
+          "leaf_count",
+          "leaf_hashes_format",
+          "build_cmd"
+        ]
+      }
+    },
+    "implementation_sketch": {
+      "phase_0": {
+        "goal": "Define an anchor schema and a Merkle commitment schema without changing existing results/ rules.",
+        "deliverables": [
+          "docs/uqhd_anchor_schema.md",
+          "schemas/uqhd_anchor_v0.1.json (JSON Schema)",
+          "scripts/uqhd_build_merkle.py (build merkle root from listed receipts/chunks)"
+        ]
+      },
+      "phase_1": {
+        "goal": "Generate anchors from existing receipts, without claiming extra compression.",
+        "deliverables": [
+          "results/uqhd_anchor_map_1e13.json (derived artifact; not replacing receipts)",
+          "results/uqhd_anchor_map_1e13.sha256",
+          "checksums.txt updated accordingly"
+        ],
+        "note": "Derived artifacts must still be empirical outputs of a deterministic script with a pinned input set."
+      }
+    },
+    "receipts_needed": [
+      {
+        "name": "uqhd_anchor_map_1e13",
+        "why": "So claims about 'anchors' become verifiable data, not narrative.",
+        "how": "Deterministic script that takes the 1e13 receipt + optional primesieve raw output and emits an anchor map + merkle root."
+      },
+      {
+        "name": "performance_receipt_matrix",
+        "why": "So runtime scaling claims are receipts, not extrapolation.",
+        "how": "Store (n, runner, primesieve_version, wall_time_seconds) as receipts for 1e9..1e14 on the same workflow."
+      }
+    ]
+  },
+  "integrity": {
+    "method": "sha256",
+    "digest": "32f82092e269e8513e2dc0cc11526a45083925385b9284d986d2b72a0e267cf9"
+  }
+}

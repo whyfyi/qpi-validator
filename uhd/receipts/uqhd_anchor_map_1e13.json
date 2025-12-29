@@ -1,0 +1,84 @@
+{
+  "receipt_metadata": {
+    "schema_version": "uqhd.anchor_map.v0.1",
+    "generated_utc": "2025-12-29T16:50:00Z",
+    "repository": {
+      "name": "whyfyi/qpi-validator",
+      "commit_hash": "881fb972ef6b149f010b3b682f6c8b7359b10e11"
+    }
+  },
+  "epoch": {
+    "bound_n": 10000000000000,
+    "twin_prime_count": 15834664872,
+    "source_receipt_path": "results/primesieve_twin_count_10000000000000.json"
+  },
+  "inputs": {
+    "mode": "file_bytes_sha256",
+    "paths": [
+      "results/primesieve_twin_count_1000000000000.json",
+      "results/primesieve_twin_count_10000000000000.json",
+      "results/primesieve_twin_counts.json",
+      "results/validation_1000000.json",
+      "results/validation_10000000.json",
+      "results/validation_100000000.json",
+      "results/validation_1000000000.json",
+      "results/validation_10000000000.json"
+    ],
+    "hash_method": "sha256"
+  },
+  "anchors": {
+    "bits_per_anchor": 256,
+    "leaf_count": 8,
+    "leaves": [
+      {
+        "anchor_id": 0,
+        "path": "results/primesieve_twin_count_1000000000000.json",
+        "leaf_sha256": "895294ccef2277499c66183df98968cbd6bca3d2699ddf43c03c58f2550e08a5"
+      },
+      {
+        "anchor_id": 1,
+        "path": "results/primesieve_twin_count_10000000000000.json",
+        "leaf_sha256": "d1401071123d96714bec70863082e2614a38fc7cba52f447863d15922dc8385e"
+      },
+      {
+        "anchor_id": 2,
+        "path": "results/primesieve_twin_counts.json",
+        "leaf_sha256": "c3bdb03b14ea3bf1908c012382842d73405883c7a9ea907417378f2583b6db71"
+      },
+      {
+        "anchor_id": 3,
+        "path": "results/validation_1000000.json",
+        "leaf_sha256": "85ee3c6aabc342b3858731365d2e9963784615e164ea84e31aa1e3a98a946dc7"
+      },
+      {
+        "anchor_id": 4,
+        "path": "results/validation_10000000.json",
+        "leaf_sha256": "e91281981b6052b77109ca97a763849d49ec2411cb2e7c907d718fa1f23ff6cc"
+      },
+      {
+        "anchor_id": 5,
+        "path": "results/validation_100000000.json",
+        "leaf_sha256": "baca41e6d02b92ac8713ca74afa5d9e1f0eafc0046145285212cdd3e0f9c2feb"
+      },
+      {
+        "anchor_id": 6,
+        "path": "results/validation_1000000000.json",
+        "leaf_sha256": "3b25744f110f72549b7acb390397fc4372ecd9c9be08612b342a6cd52d883707"
+      },
+      {
+        "anchor_id": 7,
+        "path": "results/validation_10000000000.json",
+        "leaf_sha256": "e9398ab6b668430a2f870e510da1eb38a9e5fc0df4d730bd63a3dd8eabd736d8"
+      }
+    ]
+  },
+  "merkle": {
+    "method": "sha256_merkle_v0",
+    "root_sha256": "6f25f8cebe91a5f3f13fe97bf618250c019faa3c6cf8387eca56ec9216f183d2",
+    "leaf_hash_rule": "leaf_sha256 = sha256(file bytes)"
+  },
+  "integrity": {
+    "method": "sha256",
+    "digest": "a54e0f6afde8e1759a4712da75e888cb04fe64c48f98ad569e124bc0865d32a1"
+  }
+}

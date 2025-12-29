@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "uhd/schemas/uqhd_anchor_map_v0.1.schema.json",
+  "title": "UQHD Anchor Map Receipt v0.1",
+  "type": "object",
+  "required": ["receipt_metadata","epoch","inputs","anchors","merkle","integrity"],
+  "properties": {
+    "receipt_metadata": {
+      "type": "object",
+      "required": ["schema_version","generated_utc","repository"],
+      "properties": {
+        "schema_version": {"type":"string","const":"uqhd.anchor_map.v0.1"},
+        "generated_utc": {"type":"string"},
+        "repository": {
+          "type":"object",
+          "required":["name"],
+          "properties":{
+            "name":{"type":"string"},
+            "commit_hash":{"type":"string"}
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "epoch": {
+      "type":"object",
+      "required":["bound_n","twin_prime_count","source_receipt_path"],
+      "properties":{
+        "bound_n":{"type":"integer"},
+        "twin_prime_count":{"type":"integer"},
+        "source_receipt_path":{"type":"string"}
+      },
+      "additionalProperties": false
+    },
+    "inputs": {
+      "type":"object",
+      "required":["mode","paths","hash_method"],
+      "properties":{
+        "mode":{"type":"string","enum":["file_bytes_sha256"]},
+        "paths":{"type":"array","items":{"type":"string"}},
+        "hash_method":{"type":"string","const":"sha256"}
+      },
+      "additionalProperties": false
+    },
+    "anchors": {
+      "type":"object",
+      "required":["bits_per_anchor","leaf_count","leaves"],
+      "properties":{
+        "bits_per_anchor":{"type":"integer","minimum":1},
+        "leaf_count":{"type":"integer","minimum":1},
+        "leaves":{
+          "type":"array",
+          "items":{
+            "type":"object",
+            "required":["anchor_id","path","leaf_sha256"],
+            "properties":{
+              "anchor_id":{"type":"integer","minimum":0},
+              "path":{"type":"string"},
+              "leaf_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"}
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "merkle": {
+      "type":"object",
+      "required":["method","root_sha256","leaf_hash_rule"],
+      "properties":{
+        "method":{"type":"string","const":"sha256_merkle_v0"},
+        "root_sha256":{"type":"string","pattern":"^[0-9a-f]{64}$"},
+        "leaf_hash_rule":{"type":"string"}
+      },
+      "additionalProperties": false
+    },
+    "integrity": {
+      "type":"object",
+      "required":["method","digest"],
+      "properties":{
+        "method":{"type":"string","const":"sha256"},
+        "digest":{"type":"string","pattern":"^[0-9a-f]{64}$"}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}
+
