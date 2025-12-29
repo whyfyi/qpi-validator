@@ -16,6 +16,14 @@ jobs:
           set -euo pipefail
           sha256sum -c results/checksums.txt
 
+      - name: Verify UQHD derived receipt (integrity + merkle)
+        run: |
+          python3 scripts/uqhd_verify_anchor_map.py uhd/receipts/uqhd_anchor_map_1e13.json
+
+      - name: Verify UQHD receipts ledger
+        run: |
+          sha256sum -c uhd/receipts/checksums.txt
+
       - name: Ensure every results/*.json is listed in results/checksums.txt
         run: |
           set -euo pipefail
