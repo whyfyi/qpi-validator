@@ -1,0 +1,8 @@
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Local-only duplicate of spec (canonical lives in uhd/spec/)
+#/UQHD_memory_prompt_v0.1.json
+UQHD_memory_prompt_v0.1.json
