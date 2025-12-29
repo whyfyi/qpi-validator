@@ -1,5 +1,7 @@
 # QPI (Quantum Prime Insights) — Validator Repo
-## Milestones\n- **1e13 twin prime receipt (v1.1.0-1e13):** https://github.com/whyfyi/qpi-validator/releases/tag/v1.1.0-1e13\n
+## Milestones
+- **1e13 twin prime receipt (v1.1.0-1e13):** https://github.com/whyfyi/qpi-validator/releases/tag/v1.1.0-1e13
+
 
 This repository publishes **finite, reproducible receipts** for the QPI color-sieve / midpoint framework:
 - a Python validator for the **Twin Prime Midpoint Law** (finite N),
