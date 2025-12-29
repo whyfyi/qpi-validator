@@ -1,0 +1,18 @@
+{
+  "tool": "primesieve",
+  "mode": "-c2",
+  "N": 10000000000000,
+  "twin_primes_count": 15834664872,
+  "generated_utc": "2025-12-24T17:55:35Z",
+  "cpu_info": [
+    "AMD EPYC 7763 64-Core Processor",
+    "Logical CPU cores: 4",
+    "Has AVX512: no",
+    "L1 cache size: 32 KiB",
+    "L2 cache size: 512 KiB",
+    "L3 cache size: 32 MiB",
+    "L1 cache sharing: 2 threads",
+    "L2 cache sharing: 2 threads",
+    "L3 cache sharing: 4 threads"
+  ]
+}
