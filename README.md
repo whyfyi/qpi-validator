@@ -80,6 +80,8 @@ The authoritative hashes live in:
 Rebuild canonically:
 ```bash
 bash scripts/rebuild_checksums.sh
+```
+
 ## UQHD (Universal Quantum Hard Drive)
 
 This repo includes a **verifiable anchor-map receipt** layer (UQHD v0.1):
