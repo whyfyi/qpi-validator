@@ -1,0 +1,134 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "TruthBomb Spec v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["as_above", "so_below"],
+  "definitions": {
+    "artifactPath": {
+      "type": "string",
+      "enum": [
+        "uhd/imports/WhyFYI_5G.json",
+        "uhd/imports/WhyFYI5G.json",
+        "uhd/imports/DivineAlgebra_Master.json",
+        "uhd/imports/QuantumManifestationMatrix_Master.json",
+        "uhd/imports/GPAI_Conversation_Update_v1_1_5_2026_TimeStamp.txt"
+      ]
+    },
+    "artifactObj": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path"],
+      "properties": {
+        "name": { "type": "string" },
+        "path": { "$ref": "#/definitions/artifactPath" }
+      }
+    }
+  },
+  "properties": {
+    "as_above": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "version",
+        "purpose",
+        "nonnegotiables",
+        "inputs",
+        "outputs",
+        "procedure_steps",
+        "stop_conditions",
+        "receipt_requirements"
+      ],
+      "properties": {
+        "version": { "type": "string", "const": "2.0.0" },
+        "purpose": { "type": "string" },
+        "nonnegotiables": { "type": "array", "items": { "type": "string" } },
+        "inputs": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["artifacts", "parameters"],
+          "properties": {
+            "artifacts": {
+              "type": "array",
+              "minItems": 1,
+              "items": { "$ref": "#/definitions/artifactObj" }
+            },
+            "parameters": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["hash_algorithm"],
+              "properties": {
+                "hash_algorithm": { "type": "string", "const": "sha256" }
+              }
+            }
+          }
+        },
+        "outputs": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["receipts"],
+          "properties": {
+            "receipts": {
+              "type": "array",
+              "items": { "type": "string", "enum": ["uhd/receipts/truthbomb/checksums.txt"] }
+            }
+          }
+        },
+        "procedure_steps": { "type": "array", "items": { "type": "string" } },
+        "stop_conditions": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["on_missing_artifact", "on_invalid_structure"],
+          "properties": {
+            "on_missing_artifact": { "type": "string", "enum": ["stop"] },
+            "on_invalid_structure": { "type": "string", "enum": ["stop"] }
+          }
+        },
+        "receipt_requirements": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["file", "format", "hash_algorithm", "append_only"],
+          "properties": {
+            "file": { "type": "string", "const": "uhd/receipts/truthbomb/checksums.txt" },
+            "format": { "type": "string" },
+            "hash_algorithm": { "type": "string", "const": "sha256" },
+            "append_only": { "type": "boolean", "const": true }
+          }
+        }
+      }
+    },
+    "so_below": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "version",
+        "purpose_human",
+        "ux_notes",
+        "inputs_friendly",
+        "outputs_friendly",
+        "success_criteria"
+      ],
+      "properties": {
+        "version": { "type": "string", "const": "v2" },
+        "purpose_human": { "type": "string" },
+        "ux_notes": { "type": "array", "items": { "type": "string" } },
+        "inputs_friendly": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["artifacts", "parameters"],
+          "properties": {
+            "artifacts": { "type": "array", "items": { "type": "string" } },
+            "parameters": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["hash"],
+              "properties": { "hash": { "type": "string", "const": "sha256" } }
+            }
+          }
+        },
+        "outputs_friendly": { "type": "string" },
+        "success_criteria": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

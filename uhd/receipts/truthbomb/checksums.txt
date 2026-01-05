@@ -1,0 +1,13 @@
+# Truth Bomb v2 checksums
+# Format: <sha256>  <path>  <utc_iso8601>
+# Lines below are appended by uhd/scripts/truthbomb_validate.py
+5b87a9a260f4694f813a3c00a6e5c8da4277942a87f8278cc2ead929d14b2c50  uhd/imports/WhyFYI_5G.json  2026-01-05T22:29:33Z
+b80e315b6b24dbe98d7af66569aa25e5188f0956d815178ea97644167fea5208  uhd/imports/WhyFYI5G.json  2026-01-05T22:29:33Z
+35928cad4a1f755c701fcfd019795441619e1c281389d417ac709f1f89ed0214  uhd/imports/DivineAlgebra_Master.json  2026-01-05T22:29:33Z
+86c7bd70de3dbc0f442a1e88ad9acbd00a3a65e195e04ba5de071f56eff1decc  uhd/imports/QuantumManifestationMatrix_Master.json  2026-01-05T22:29:33Z
+a3a3545eae84282583625881bc3279be4f88a695db816b00747dc287e4f0c0d0  uhd/imports/GPAI_Conversation_Update_v1_1_5_2026_TimeStamp.txt  2026-01-05T22:29:33Z
+5b87a9a260f4694f813a3c00a6e5c8da4277942a87f8278cc2ead929d14b2c50  uhd/imports/WhyFYI_5G.json  2026-01-05T22:43:54Z
+b80e315b6b24dbe98d7af66569aa25e5188f0956d815178ea97644167fea5208  uhd/imports/WhyFYI5G.json  2026-01-05T22:43:54Z
+35928cad4a1f755c701fcfd019795441619e1c281389d417ac709f1f89ed0214  uhd/imports/DivineAlgebra_Master.json  2026-01-05T22:43:54Z
+86c7bd70de3dbc0f442a1e88ad9acbd00a3a65e195e04ba5de071f56eff1decc  uhd/imports/QuantumManifestationMatrix_Master.json  2026-01-05T22:43:54Z
+a3a3545eae84282583625881bc3279be4f88a695db816b00747dc287e4f0c0d0  uhd/imports/GPAI_Conversation_Update_v1_1_5_2026_TimeStamp.txt  2026-01-05T22:43:54Z

@@ -1,0 +1,73 @@
+{
+  "as_above": {
+    "version": "2.0.0",
+    "purpose": "Validate staged imports and record their SHA-256 checksums as an auditable receipt (local-only, no network).",
+    "nonnegotiables": [
+      "No external network access during validation",
+      "Write only under uhd/receipts/truthbomb",
+      "Declared artifacts restricted to the five staged imports",
+      "Stop on missing artifacts or invalid structure"
+    ],
+    "inputs": {
+      "artifacts": [
+        { "name": "WhyFYI_5G", "path": "uhd/imports/WhyFYI_5G.json" },
+        { "name": "WhyFYI5G", "path": "uhd/imports/WhyFYI5G.json" },
+        { "name": "DivineAlgebra_Master", "path": "uhd/imports/DivineAlgebra_Master.json" },
+        { "name": "QuantumManifestationMatrix_Master", "path": "uhd/imports/QuantumManifestationMatrix_Master.json" },
+        { "name": "GPAI_Conversation_Update", "path": "uhd/imports/GPAI_Conversation_Update_v1_1_5_2026_TimeStamp.txt" }
+      ],
+      "parameters": {
+        "hash_algorithm": "sha256"
+      }
+    },
+    "outputs": {
+      "receipts": [
+        "uhd/receipts/truthbomb/checksums.txt"
+      ]
+    },
+    "procedure_steps": [
+      "Validate spec structure (required keys and types)",
+      "Confirm each declared artifact exists and is readable",
+      "Compute SHA-256 for each declared artifact path",
+      "Append one receipt line per artifact: <sha256>  <path>  <utc_iso8601>"
+    ],
+    "stop_conditions": {
+      "on_missing_artifact": "stop",
+      "on_invalid_structure": "stop"
+    },
+    "receipt_requirements": {
+      "file": "uhd/receipts/truthbomb/checksums.txt",
+      "format": "<sha256>  <path>  <utc_iso8601>",
+      "hash_algorithm": "sha256",
+      "append_only": true
+    }
+  },
+  "so_below": {
+    "version": "v2",
+    "purpose_human": "Truth Bomb v2 makes a verifiable, human-readable receipt ledger by hashing a fixed set of staged files (imports) locally.",
+    "ux_notes": [
+      "Imports may be symlinks; hashing resolves actual file bytes.",
+      "Receipts are append-only; each run adds new lines with timestamps.",
+      "This is intentionally local-only: no network calls."
+    ],
+    "inputs_friendly": {
+      "artifacts": [
+        "WhyFYI_5G.json",
+        "WhyFYI5G.json",
+        "DivineAlgebra_Master.json",
+        "QuantumManifestationMatrix_Master.json",
+        "GPAI_Conversation_Update_v1_1_5_2026_TimeStamp.txt"
+      ],
+      "parameters": {
+        "hash": "sha256"
+      }
+    },
+    "outputs_friendly": "Appends checksum lines to uhd/receipts/truthbomb/checksums.txt.",
+    "success_criteria": [
+      "Spec contains as_above and so_below",
+      "All staged imports exist at uhd/imports/*",
+      "Validator runs without errors",
+      "Checksums ledger gains 5 new lines (one per artifact)"
+    ]
+  }
+}
