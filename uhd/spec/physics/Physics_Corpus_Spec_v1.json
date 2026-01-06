@@ -1,0 +1,56 @@
+{
+  "as_above": {
+    "version": "1.0.0",
+    "purpose": "Hash and receipt a physics PDF (Halliday cheatsheet) staged locally under uhd/imports/physics.",
+    "nonnegotiables": [
+      "No external network access",
+      "Do not commit PDFs",
+      "Operate only under uhd/"
+    ],
+    "inputs": {
+      "artifacts": [
+        { "name": "Halliday_Cheatsheet", "path": "uhd/imports/physics/Halliday_Cheatsheet.pdf" }
+      ],
+      "parameters": { "hash_algorithm": "sha256" }
+    },
+    "outputs": {
+      "receipts": [
+        "uhd/receipts/physics/checksums.latest.txt",
+        "uhd/receipts/physics/checksums.ledger.txt"
+      ]
+    },
+    "procedure_steps": [
+      "Validate spec structure and allowed artifact path",
+      "Compute SHA-256 for Halliday_Cheatsheet.pdf",
+      "Overwrite checksums.latest.txt with a single line",
+      "Append a line to checksums.ledger.txt"
+    ],
+    "stop_conditions": {
+      "on_missing_artifact": "stop",
+      "on_invalid_structure": "stop"
+    },
+    "receipt_requirements": {
+      "latest_file": "uhd/receipts/physics/checksums.latest.txt",
+      "ledger_file": "uhd/receipts/physics/checksums.ledger.txt",
+      "format": "<sha256>  <path>  <utc_iso8601>"
+    }
+  },
+  "so_below": {
+    "version": "v1",
+    "purpose_human": "Hash the staged Halliday cheatsheet PDF and capture receipts.",
+    "ux_notes": [
+      "Place or symlink the PDF at uhd/imports/physics/Halliday_Cheatsheet.pdf",
+      "PDF is not committed; only receipts are committed"
+    ],
+    "inputs_friendly": {
+      "artifact": "Halliday_Cheatsheet.pdf",
+      "parameters": { "hash": "sha256" }
+    },
+    "outputs_friendly": "Writes checksums.latest.txt and appends checksums.ledger.txt",
+    "success_criteria": [
+      "Spec validates",
+      "PDF exists at declared path",
+      "SHA-256 computed and receipts updated"
+    ]
+  }
+}
