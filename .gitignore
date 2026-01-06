@@ -6,3 +6,22 @@ __pycache__/
 # Local-only duplicate of spec (canonical lives in uhd/spec/)
 #/UQHD_memory_prompt_v0.1.json
 UQHD_memory_prompt_v0.1.json
+
+# Truth Bomb local staging (do not commit symlinks)
+
+# Python caches
+__pycache__/
+*.pyc
+
+# Local-only snapshots (do not commit)
+uhd/receipts/snapshots/
+
+# uhd/imports is local staging (symlinks). Do not commit staged inputs.
+uhd/imports/*
+!uhd/imports/README.md
+
+# Local-only snapshots (do not commit)
+uhd/receipts/snapshots/
+
+# Python caches
+__pycache__/

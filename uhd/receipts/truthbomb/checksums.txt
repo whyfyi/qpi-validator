@@ -1,0 +1,3 @@
+# Truth Bomb v2 checksums
+# Format: <sha256>  <path>  <utc_iso8601>
+# Lines below are appended by uhd/scripts/truthbomb_validate.py
