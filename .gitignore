@@ -25,3 +25,13 @@ uhd/receipts/snapshots/
 
 # Python caches
 __pycache__/
+
+# Physics imports: ignore all, allow README
+!uhd/imports/physics/
+uhd/imports/physics/*
+!uhd/imports/physics/README.md
+
+# Physics receipts are local outputs (do not commit)
+uhd/receipts/physics/checksums.latest.txt
+uhd/receipts/physics/checksums.ledger.txt
+!uhd/receipts/physics/README.md
