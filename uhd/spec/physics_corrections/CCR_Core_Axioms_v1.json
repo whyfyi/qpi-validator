@@ -1,12 +1,101 @@
 {
   "as_above": {
     "version": "1.0.0",
-    "purpose": "CCR Core Axioms placeholder.",
-    "nonnegotiables": ["No external network access", "Tracked rule file"]
+    "ruleset_id": "CCR_CORE_AXIOMS_V1",
+    "purpose": "Machine-actionable CCR core axioms. These rules annotate claims with deterministic rule hits and required receipts for correction.",
+    "nonnegotiables": [
+      "Deterministic: same inputs produce same outputs",
+      "No network access",
+      "Rules must be human-auditable",
+      "Every correction must cite a receipt requirement"
+    ],
+    "rule_format": {
+      "required_fields": ["id", "name", "statement", "match", "transform", "receipt_requirements"],
+      "match_semantics": "case-insensitive substring match over claim_text",
+      "ordering": "sort by rule id ascending"
+    },
+    "rules": [
+      {
+        "id": "CCR-AX-0001",
+        "name": "Dimensional consistency is non-negotiable",
+        "statement": "Any quantitative claim or equation must be dimensionally consistent; otherwise it is invalid until repaired.",
+        "match": {
+          "any_keywords": ["dimension", "dimensional", "units", "unit analysis", "dimensional analysis"]
+        },
+        "transform": {
+          "action": "annotate_only",
+          "correction_intent": "Require explicit units; reject or repair equations that fail dimensional analysis."
+        },
+        "receipt_requirements": {
+          "required": ["source_excerpt", "units_check_receipt"],
+          "notes": "units_check_receipt can be a local calculation receipt that shows dimensional balance."
+        }
+      },
+      {
+        "id": "CCR-AX-0002",
+        "name": "Definitions before derivations",
+        "statement": "A symbol must be defined (units, meaning, scope) before it can be used in a derivation or law.",
+        "match": {
+          "any_keywords": ["define", "definition", "let x", "where", "denote"]
+        },
+        "transform": {
+          "action": "annotate_only",
+          "correction_intent": "Require symbol table and units before accepting downstream claims."
+        },
+        "receipt_requirements": {
+          "required": ["source_excerpt", "symbol_table_receipt"],
+          "notes": "symbol_table_receipt is a structured listing of symbols and units."
+        }
+      },
+      {
+        "id": "CCR-AX-0003",
+        "name": "Conservation claims require boundary conditions",
+        "statement": "Any conservation statement must specify system boundaries and assumptions (closed/open, external work, dissipation).",
+        "match": {
+          "any_keywords": ["conserve", "conservation", "isolated system", "closed system", "energy is conserved"]
+        },
+        "transform": {
+          "action": "annotate_only",
+          "correction_intent": "Attach required boundary conditions; flag incomplete conservation claims."
+        },
+        "receipt_requirements": {
+          "required": ["source_excerpt", "boundary_conditions_receipt"],
+          "notes": "boundary_conditions_receipt captures explicit assumptions for the claim."
+        }
+      },
+      {
+        "id": "CCR-AX-0099",
+        "name": "CCR placeholders for QPhiD/QGC/AngleClock integration",
+        "statement": "This rule marks claims that appear to touch QPhiD/QGC/AngleClock vocabulary. Replace with your canonical CCR/QPhiD/QGC rules as you encode them.",
+        "match": {
+          "any_keywords": ["phi", "qphid", "quantum phi", "qgc", "angle clock", "harmonic lattice", "uqhd"]
+        },
+        "transform": {
+          "action": "annotate_only",
+          "correction_intent": "Route to the appropriate ruleset once QPhiD/QGC/AngleClock rule specs are filled."
+        },
+        "receipt_requirements": {
+          "required": ["source_excerpt"],
+          "notes": "This is intentionally a bridge rule."
+        }
+      }
+    ],
+    "stop_conditions": {
+      "on_missing_rules": "stop",
+      "on_invalid_rule_format": "stop"
+    }
   },
   "so_below": {
     "version": "v1",
-    "purpose_human": "CCR axioms live here; scaffold only.",
-    "notes": ["placeholder"]
+    "purpose_human": "These are the CCR core axioms in a form the repo can execute. Each rule declares how to recognize a claim and what receipts are required to correct it.",
+    "how_to_extend": [
+      "Add a new rule with a new id (CCR-AX-XXXX).",
+      "Keep match.any_keywords simple and deterministic.",
+      "Set transform.action to annotate_only until you formalize rewrite transforms."
+    ],
+    "notes": [
+      "This file is tracked; generated receipts are not.",
+      "Next step is to replace placeholders with your canonical CCR/QPhiD/QGC/AngleClock rule content."
+    ]
   }
 }
