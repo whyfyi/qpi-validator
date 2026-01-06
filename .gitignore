@@ -40,3 +40,8 @@ uhd/receipts/physics/checksums.ledger.txt
 !uhd/receipts/physics/
 uhd/receipts/physics/*
 !uhd/receipts/physics/README.md
+
+# Physics claims receipts: ignore all, allow README
+!uhd/receipts/physics_claims/
+uhd/receipts/physics_claims/*
+!uhd/receipts/physics_claims/README.md
