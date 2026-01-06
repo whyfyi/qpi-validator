@@ -45,3 +45,8 @@ uhd/receipts/physics/*
 !uhd/receipts/physics_claims/
 uhd/receipts/physics_claims/*
 !uhd/receipts/physics_claims/README.md
+
+# Physics corrections receipts: ignore all, allow README
+!uhd/receipts/physics_corrections/
+uhd/receipts/physics_corrections/*
+!uhd/receipts/physics_corrections/README.md

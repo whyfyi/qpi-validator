@@ -1,0 +1,141 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Physics Corrections Spec v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["as_above", "so_below"],
+  "definitions": {
+    "artifactPath": {
+      "type": "string",
+      "enum": [
+        "uhd/receipts/physics_claims/claims.latest.jsonl",
+        "uhd/spec/physics_corrections/CCR_Core_Axioms_v1.json",
+        "uhd/spec/physics_corrections/QPhiD_Rules_v1.json",
+        "uhd/spec/physics_corrections/QGC_Rules_v1.json",
+        "uhd/spec/physics_corrections/AngleClock_Model_v1.json"
+      ]
+    },
+    "artifactObj": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path"],
+      "properties": {
+        "name": { "type": "string" },
+        "path": { "$ref": "#/definitions/artifactPath" }
+      }
+    }
+  },
+  "properties": {
+    "as_above": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "version",
+        "purpose",
+        "nonnegotiables",
+        "inputs",
+        "outputs",
+        "procedure_steps",
+        "stop_conditions",
+        "receipt_requirements"
+      ],
+      "properties": {
+        "version": { "type": "string", "const": "1.0.0" },
+        "purpose": { "type": "string" },
+        "nonnegotiables": { "type": "array", "items": { "type": "string" } },
+        "inputs": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["artifacts", "parameters"],
+          "properties": {
+            "artifacts": {
+              "type": "array",
+              "minItems": 5,
+              "maxItems": 5,
+              "items": { "$ref": "#/definitions/artifactObj" }
+            },
+            "parameters": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["hash_algorithm"],
+              "properties": {
+                "hash_algorithm": { "type": "string", "const": "sha256" }
+              }
+            }
+          }
+        },
+        "outputs": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["receipts"],
+          "properties": {
+            "receipts": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": {
+                "type": "string",
+                "enum": [
+                  "uhd/receipts/physics_corrections/corrections.latest.jsonl",
+                  "uhd/receipts/physics_corrections/corrections.ledger.txt"
+                ]
+              }
+            }
+          }
+        },
+        "procedure_steps": { "type": "array", "items": { "type": "string" } },
+        "stop_conditions": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["on_missing_rules", "on_missing_claims"],
+          "properties": {
+            "on_missing_rules": { "type": "string", "enum": ["stop"] },
+            "on_missing_claims": { "type": "string", "enum": ["stop"] }
+          }
+        },
+        "receipt_requirements": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["ledger_file", "format"],
+          "properties": {
+            "ledger_file": { "type": "string", "const": "uhd/receipts/physics_corrections/corrections.ledger.txt" },
+            "format": { "type": "string" }
+          }
+        }
+      }
+    },
+    "so_below": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "version",
+        "purpose_human",
+        "ux_notes",
+        "inputs_friendly",
+        "outputs_friendly",
+        "success_criteria"
+      ],
+      "properties": {
+        "version": { "type": "string", "const": "v1" },
+        "purpose_human": { "type": "string" },
+        "ux_notes": { "type": "array", "items": { "type": "string" } },
+        "inputs_friendly": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["artifact", "parameters"],
+          "properties": {
+            "artifact": { "type": "string", "const": "claims.latest.jsonl" },
+            "parameters": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["hash"],
+              "properties": { "hash": { "type": "string", "const": "sha256" } }
+            }
+          }
+        },
+        "outputs_friendly": { "type": "string" },
+        "success_criteria": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

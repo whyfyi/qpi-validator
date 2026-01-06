@@ -1,0 +1,12 @@
+{
+  "as_above": {
+    "version": "1.0.0",
+    "purpose": "CCR Core Axioms placeholder.",
+    "nonnegotiables": ["No external network access", "Tracked rule file"]
+  },
+  "so_below": {
+    "version": "v1",
+    "purpose_human": "CCR axioms live here; scaffold only.",
+    "notes": ["placeholder"]
+  }
+}
