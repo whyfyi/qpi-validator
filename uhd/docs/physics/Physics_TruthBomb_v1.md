@@ -34,3 +34,12 @@ python3 uhd/scripts/physics_corpus_validate.py \
 ```
 
 No external dependencies; standard library only.
+
+## Text extraction
+- Dependency: `pdftotext` (from Poppler/Xpdf). The extractor uses it via subprocess.
+- Command: `python3 uhd/scripts/physics_extract_text.py --pdf uhd/imports/physics/Halliday_Cheatsheet.pdf`
+- Outputs:
+  - Extracted text: `uhd/receipts/physics/halliday_cheatsheet.latest.txt`
+  - Receipts written to:
+    - Overwrite: `uhd/receipts/physics/extract.latest.txt`
+    - Append:    `uhd/receipts/physics/extract.ledger.txt`
