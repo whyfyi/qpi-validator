@@ -1,0 +1,60 @@
+{
+  "as_above": {
+    "version": "1.0.0",
+    "purpose": "Parse extracted Halliday text into a structured claims index and write receipts.",
+    "nonnegotiables": [
+      "No external network access",
+      "Do not commit PDFs or generated receipts",
+      "Operate only under uhd/"
+    ],
+    "inputs": {
+      "artifacts": [
+        { "name": "halliday_text_latest", "path": "uhd/receipts/physics/halliday_cheatsheet.latest.txt" }
+      ],
+      "parameters": {
+        "hash_algorithm": "sha256",
+        "max_lines": 200000
+      }
+    },
+    "outputs": {
+      "receipts": [
+        "uhd/receipts/physics_claims/claims.latest.jsonl",
+        "uhd/receipts/physics_claims/claims.extract.latest.txt",
+        "uhd/receipts/physics_claims/claims.ledger.txt"
+      ]
+    },
+    "procedure_steps": [
+      "Read the input latest text",
+      "Extract best-effort claims and write JSON Lines",
+      "Write a top-100 human summary extract",
+      "Compute sha256 for input and outputs",
+      "Write latest receipts and append ledger lines"
+    ],
+    "stop_conditions": {
+      "on_missing_artifact": "stop",
+      "on_invalid_structure": "stop"
+    },
+    "receipt_requirements": {
+      "latest_receipts_file": "uhd/receipts/physics_claims/claims.receipts.latest.txt",
+      "ledger_file": "uhd/receipts/physics_claims/claims.ledger.txt",
+      "format": "<sha256>  <path>  <utc_iso8601>"
+    }
+  },
+  "so_below": {
+    "version": "v1",
+    "purpose_human": "Turn the extracted Halliday text into a claims index and receipts.",
+    "ux_notes": [
+      "Requires running physics_extract_text.py first to produce the latest text"
+    ],
+    "inputs_friendly": {
+      "artifact": "halliday_cheatsheet.latest.txt",
+      "parameters": { "hash": "sha256", "max_lines": 200000 }
+    },
+    "outputs_friendly": "Writes JSONL claims, a top 100 summary extract, and updates receipts (latest + ledger)",
+    "success_criteria": [
+      "Spec validates",
+      "Claims JSONL and extract summary written",
+      "Receipts updated for input and outputs"
+    ]
+  }
+}
