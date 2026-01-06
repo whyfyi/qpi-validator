@@ -1,0 +1,60 @@
+{
+  "as_above": {
+    "version": "1.0.0",
+    "purpose": "Apply CCR/QPhiD/QGC/AngleClock corrections to physics claims with receipts.",
+    "nonnegotiables": [
+      "No external network access",
+      "Do not commit PDFs or generated receipts",
+      "Operate only under uhd/"
+    ],
+    "inputs": {
+      "artifacts": [
+        { "name": "claims_latest", "path": "uhd/receipts/physics_claims/claims.latest.jsonl" },
+        { "name": "CCR_Core_Axioms_v1", "path": "uhd/spec/physics_corrections/CCR_Core_Axioms_v1.json" },
+        { "name": "QPhiD_Rules_v1", "path": "uhd/spec/physics_corrections/QPhiD_Rules_v1.json" },
+        { "name": "QGC_Rules_v1", "path": "uhd/spec/physics_corrections/QGC_Rules_v1.json" },
+        { "name": "AngleClock_Model_v1", "path": "uhd/spec/physics_corrections/AngleClock_Model_v1.json" }
+      ],
+      "parameters": {
+        "hash_algorithm": "sha256"
+      }
+    },
+    "outputs": {
+      "receipts": [
+        "uhd/receipts/physics_corrections/corrections.latest.jsonl",
+        "uhd/receipts/physics_corrections/corrections.ledger.txt"
+      ]
+    },
+    "procedure_steps": [
+      "Verify required rule spec files exist",
+      "If claims.latest.jsonl missing, stop with instruction to run extract and claims build",
+      "Pass-through: emit corrections.latest.jsonl with added scaffold fields",
+      "Compute sha256 for inputs+rules+output and write receipts"
+    ],
+    "stop_conditions": {
+      "on_missing_rules": "stop",
+      "on_missing_claims": "stop"
+    },
+    "receipt_requirements": {
+      "ledger_file": "uhd/receipts/physics_corrections/corrections.ledger.txt",
+      "format": "<sha256>  <path>  <utc_iso8601>"
+    }
+  },
+  "so_below": {
+    "version": "v1",
+    "purpose_human": "Scaffold to apply corrections; currently pass-through with receipts.",
+    "ux_notes": [
+      "Requires prior stages: physics_extract_text.py then physics_claims_build.py"
+    ],
+    "inputs_friendly": {
+      "artifact": "claims.latest.jsonl",
+      "parameters": { "hash": "sha256" }
+    },
+    "outputs_friendly": "Writes corrections.latest.jsonl and updates corrections.ledger.txt (local receipts)",
+    "success_criteria": [
+      "Rule specs are present",
+      "Claims input present or a clear error is shown",
+      "Outputs and receipts written locally"
+    ]
+  }
+}
