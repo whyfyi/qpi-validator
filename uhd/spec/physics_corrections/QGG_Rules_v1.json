@@ -149,6 +149,30 @@
         "receipt_requirements": [
           "hit"
         ]
+      },
+      {
+        "id": "QGG-009",
+        "name": "GR equation features",
+        "statement": "Match curvature/Einstein-like equations",
+        "match": { "any_equations": ["="], "any_symbols": ["Δ"], "any_units": ["kg"] },
+        "transform": { "add_tags": ["QGG:curvature"], "recommended_rewrite": "Equation-like snippet; treat as geometry/dynamics candidate mapping." },
+        "receipt_requirements": ["hit"]
+      },
+      {
+        "id": "QGG-010",
+        "name": "Curved spacetime/geodesic phrases",
+        "statement": "Substring features for curved spacetime/geodesics",
+        "match": { "any_substrings": ["curved spacetime", "geodesic"] },
+        "transform": { "add_tags": ["QGG:geometry"], "recommended_rewrite": "Geometry phrasing: treat as model framing for gravitational motion." },
+        "receipt_requirements": ["hit"]
+      },
+      {
+        "id": "QGG-011",
+        "name": "Potential symbol",
+        "statement": "Potential symbol and phrase",
+        "match": { "any_symbols": ["φ"], "any_substrings": ["potential"] },
+        "transform": { "add_tags": ["QGG:field"], "recommended_rewrite": "Potential references: present as modeling convenience; hypothesis language." },
+        "receipt_requirements": ["hit"]
       }
     ]
   },

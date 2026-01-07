@@ -34,6 +34,9 @@ class Claim:
     source_span: Tuple[int, int]
     is_layout_noise: bool
     layout_tags: List[str]
+    extracted_symbols: List[str]
+    extracted_units: List[str]
+    extracted_equations: List[str]
 
 
 def utc_now_iso() -> str:
@@ -101,6 +104,31 @@ def iter_claims(lines: Iterable[str], max_lines: int) -> Iterable[Claim]:
         if glyph_hits >= 2:
             layout_tags.append("layout:glyphs")
         is_noise = bool(layout_tags)
+
+        # deterministic feature extraction
+        # symbols: curated greek/math tokens
+        SYMBOLS = [
+            "λ", "ω", "θ", "Δ", "∑", "∫", "μ", "α", "β", "γ", "Ω", "η", "κ", "π", "χ", "φ", "ψ", "τ", "σ"
+        ]
+        sym_hits = sorted({s for s in SYMBOLS if s in txt})
+
+        # units: curated multi-character tokens (case-insensitive)
+        unit_tokens = [
+            "hz", "pa", "mol", "cd", "kg", "rad", "rad/s", "m/s", "m/s^2"
+        ]
+        low_txt = txt.lower()
+        unit_hits = sorted({(u.upper() if u in {"hz", "pa"} else u) for u in unit_tokens if u in low_txt})
+
+        # equations: short snippets around '=' or '≈', normalized whitespace, max ~60 chars
+        eq_hits = []
+        for m in re.finditer(r"[=≈]", txt):
+            start = max(0, m.start() - 30)
+            end = min(len(txt), m.end() + 30)
+            snippet = txt[start:end]
+            snippet = re.sub(r"\s+", " ", snippet.strip())
+            if 1 <= len(snippet) <= 60:
+                eq_hits.append(snippet)
+        eq_hits = sorted(set(eq_hits))
         yield Claim(
             id=cid,
             kind=kind,
@@ -109,6 +137,9 @@ def iter_claims(lines: Iterable[str], max_lines: int) -> Iterable[Claim]:
             source_span=(i, i),
             is_layout_noise=is_noise,
             layout_tags=sorted(set(layout_tags)),
+            extracted_symbols=sym_hits,
+            extracted_units=unit_hits,
+            extracted_equations=eq_hits,
         )
 
 
@@ -125,6 +156,9 @@ def write_jsonl(path: str, claims: Iterable[Claim]) -> int:
                 "source_span": list(c.source_span),
                 "is_layout_noise": c.is_layout_noise,
                 "layout_tags": c.layout_tags,
+                "extracted_symbols": c.extracted_symbols,
+                "extracted_units": c.extracted_units,
+                "extracted_equations": c.extracted_equations,
             }
             f.write(json.dumps(obj, ensure_ascii=False) + "\n")
             count += 1

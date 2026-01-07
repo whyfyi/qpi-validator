@@ -58,6 +58,11 @@ def verify_output(out_path: str) -> bytes:
                 raise SystemExit(f"line {i}: model_tags not list")
             if tags != sorted(tags) or len(tags) != len(set(tags)):
                 raise SystemExit(f"line {i}: model_tags not sorted unique")
+            # Feature extraction lists must exist
+            for k in ("extracted_symbols", "extracted_units", "extracted_equations"):
+                v = obj.get(k)
+                if not isinstance(v, list):
+                    raise SystemExit(f"line {i}: {k} not list")
     return b
 
 
