@@ -15,6 +15,7 @@ import os
 import sys
 import datetime as _dt
 import argparse
+import re
 from typing import List, Dict, Any
 
 SPEC_PATH = "uhd/spec/physics_corrections/Physics_Corrections_Spec_v1.json"
@@ -98,10 +99,60 @@ def claim_text_from(obj: Dict[str, Any]) -> str:
 
 
 def apply_rules(obj: Dict[str, Any], rulesets: List[Dict[str, Any]]) -> Dict[str, Any]:
-    text_ci = claim_text_from(obj).lower()
+    # Determine claim text and infer layout noise if missing
+    text_raw = claim_text_from(obj)
+    norm = obj.get('normalized_text')
+    if not isinstance(norm, str):
+        s = text_raw.strip().lower()
+        norm = re.sub(r"\s+", " ", s)
+
+    existing_layout_tags = obj.get('layout_tags') if isinstance(obj.get('layout_tags'), list) else []
+    noise_flag = obj.get('is_layout_noise') if isinstance(obj.get('is_layout_noise'), bool) else None
+
+    inferred_tags: List[str] = []
+    if noise_flag is None:
+        # Apply conservative heuristics mirroring claims builder
+        if not norm:
+            inferred_tags.append('layout:empty')
+        if norm and len(norm) < 5:
+            inferred_tags.append('layout:short')
+        ns = ''.join(ch for ch in text_raw if not ch.isspace())
+        if ns:
+            alnum = sum(ch.isalnum() for ch in ns)
+            if alnum / max(1, len(ns)) < 0.3:
+                inferred_tags.append('layout:nonalnum-heavy')
+        suspicious = ['\u200b', '\u200c', '\ufeff', '•', '·', '▪', '—', '–', '□']
+        glyph_hits = sum(text_raw.count(x) for x in suspicious)
+        if glyph_hits >= 2:
+            inferred_tags.append('layout:glyphs')
+    # Decide final noise and tags without overwriting existing ones
+    final_layout_tags = existing_layout_tags if existing_layout_tags else sorted(set(inferred_tags))
+    final_is_noise = (noise_flag if noise_flag is not None else bool(final_layout_tags))
+
+    text_ci = text_raw.lower()
     hits = []
     tags: List[str] = []
     recs: List[str] = []
+    # Quarantine layout noise: do not apply physics rules
+    if final_is_noise:
+        tags = sorted(set((obj.get('model_tags') or []) + ['TXT:layout_noise']))
+        out = {
+            "id": obj.get("id"),
+            "kind": obj.get("kind"),
+            "text": obj.get("text"),
+            "normalized_text": obj.get("normalized_text"),
+            "source_span": obj.get("source_span"),
+            "rule_hits": [],
+            "model_tags": tags,
+            "recommended_rewrites": [],
+            "is_layout_noise": True,
+            "layout_tags": final_layout_tags,
+        }
+        for k in sorted(obj.keys()):
+            if k in out:
+                continue
+            out[k] = obj[k]
+        return out
     for rs in rulesets:
         rs_id = rs.get('as_above', {}).get('ruleset_id') or rs.get('so_below', {}).get('version', 'unknown')
         for r in rs.get('as_above', {}).get('rules', []):
@@ -126,6 +177,8 @@ def apply_rules(obj: Dict[str, Any], rulesets: List[Dict[str, Any]]) -> Dict[str
         "rule_hits": hits,
         "model_tags": tags,
         "recommended_rewrites": sorted(set(recs)),
+        "is_layout_noise": False if noise_flag is None else bool(noise_flag),
+        "layout_tags": existing_layout_tags if existing_layout_tags else final_layout_tags,
     }
     # Carry over any other original keys without timestamps, in stable order
     for k in sorted(obj.keys()):
