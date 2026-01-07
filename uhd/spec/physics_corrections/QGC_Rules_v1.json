@@ -1,12 +1,26 @@
 {
   "as_above": {
     "version": "1.0.0",
-    "purpose": "QGC Rules placeholder.",
-    "nonnegotiables": ["No external network access", "Tracked rule file"]
+    "ruleset_id": "QGC.v1",
+    "purpose": "Quantum Geometric Corrections — geometry/curvature/geodesic/metric/tensor starter rules (deterministic, conservative).",
+    "nonnegotiables": ["No external network access", "Tracked rule file"],
+    "rule_format": "claim_substring_ci_v1 + feature match object",
+    "rules": [
+      {"id": "QGC-001", "name": "spacetime", "statement": "spacetime mentions", "match": ["spacetime"], "transform": {"add_tags": ["QGC:spacetime"]}, "receipt_requirements": ["hit"]},
+      {"id": "QGC-002", "name": "curvature", "statement": "curvature mentions", "match": ["curvature"], "transform": {"add_tags": ["QGC:curvature"], "recommended_rewrite": "Curvature phrasing: interpret as geometric model framing (candidate)."}, "receipt_requirements": ["hit"]},
+      {"id": "QGC-003", "name": "geodesic", "statement": "geodesic mentions", "match": ["geodesic"], "transform": {"add_tags": ["QGC:geodesic"]}, "receipt_requirements": ["hit"]},
+      {"id": "QGC-004", "name": "metric", "statement": "metric mentions", "match": ["metric"], "transform": {"add_tags": ["QGC:metric"]}, "receipt_requirements": ["hit"]},
+      {"id": "QGC-005", "name": "tensor", "statement": "tensor mentions", "match": ["tensor"], "transform": {"add_tags": ["QGC:tensor"]}, "receipt_requirements": ["hit"]},
+      {"id": "QGC-006", "name": "einstein/GR", "statement": "einstein/general relativity", "match": {"any_substrings": ["einstein", "general relativity"]}, "transform": {"add_tags": ["QGC:gr"]}, "receipt_requirements": ["hit"]},
+      {"id": "QGC-007", "name": "connection/Christoffel", "statement": "connection language", "match": {"any_substrings": ["connection", "christoffel"]}, "transform": {"add_tags": ["QGC:connection"]}, "receipt_requirements": ["hit"]},
+      {"id": "QGC-008", "name": "coordinate frame", "statement": "coordinate/frame", "match": {"any_substrings": ["coordinate", "frame of reference"]}, "transform": {"add_tags": ["QGC:frame"]}, "receipt_requirements": ["hit"]},
+      {"id": "QGC-009", "name": "riemann curvature", "statement": "riemann curvature", "match": {"any_substrings": ["riemann", "ricci"]}, "transform": {"add_tags": ["QGC:curvature"]}, "receipt_requirements": ["hit"]},
+      {"id": "QGC-010", "name": "line element", "statement": "line element ds^2", "match": {"any_substrings": ["line element", "ds^2", "ds2"]}, "transform": {"add_tags": ["QGC:metric"]}, "receipt_requirements": ["hit"]}
+    ]
   },
   "so_below": {
     "version": "v1",
-    "purpose_human": "QGC correction rules live here; scaffold only.",
-    "notes": ["placeholder"]
+    "purpose_human": "QGC correction rules (starter set).",
+    "notes": ["Deterministic; conservative substrings and features."]
   }
 }
