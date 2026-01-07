@@ -101,6 +101,7 @@ def apply_rules(obj: Dict[str, Any], rulesets: List[Dict[str, Any]]) -> Dict[str
     text_ci = claim_text_from(obj).lower()
     hits = []
     tags: List[str] = []
+    recs: List[str] = []
     for rs in rulesets:
         rs_id = rs.get('as_above', {}).get('ruleset_id') or rs.get('so_below', {}).get('version', 'unknown')
         for r in rs.get('as_above', {}).get('rules', []):
@@ -109,6 +110,9 @@ def apply_rules(obj: Dict[str, Any], rulesets: List[Dict[str, Any]]) -> Dict[str
                 if needle.lower() in text_ci:
                     hits.append({"ruleset_id": rs_id, "rule_id": rid})
                     tags.extend(r.get('transform', {}).get('add_tags', []))
+                    rr = r.get('transform', {}).get('recommended_rewrite')
+                    if isinstance(rr, str) and rr.strip():
+                        recs.append(rr.strip())
                     break
     # Deduplicate + sort tags
     tags = sorted(set(tags))
@@ -121,6 +125,7 @@ def apply_rules(obj: Dict[str, Any], rulesets: List[Dict[str, Any]]) -> Dict[str
         "source_span": obj.get("source_span"),
         "rule_hits": hits,
         "model_tags": tags,
+        "recommended_rewrites": sorted(set(recs)),
     }
     # Carry over any other original keys without timestamps, in stable order
     for k in sorted(obj.keys()):

@@ -79,12 +79,17 @@ def write_md(path: str, claims: List[Dict[str, Any]]) -> None:
             text = c.get("text") or c.get("normalized_text") or ""
             tags = c.get("model_tags") or []
             rh = c.get("rule_hits") or []
+            recs = c.get("recommended_rewrites") or []
             rh_pairs = [
                 f"{(h.get('ruleset_id') or 'NA')}:{(h.get('rule_id') or 'NA')}" for h in rh if isinstance(h, dict)
             ]
             f.write(f"- id: {rid} | kind: {kind} | text: {short_text(text)}\n")
             f.write(f"  - tags: {', '.join(tags)}\n")
             f.write(f"  - rule_hits: {', '.join(rh_pairs)}\n")
+            if isinstance(recs, list) and recs:
+                joined = ' | '.join(str(x) for x in recs)
+                short = joined if len(joined) <= 200 else joined[:199] + '…'
+                f.write(f"  - recommended_rewrite: {short}\n")
 
 
 def write_receipts(inp: str, out_md: str) -> None:
