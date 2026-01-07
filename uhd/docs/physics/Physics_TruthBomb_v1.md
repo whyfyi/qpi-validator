@@ -43,3 +43,10 @@ No external dependencies; standard library only.
   - Receipts written to:
     - Overwrite: `uhd/receipts/physics/extract.latest.txt`
     - Append:    `uhd/receipts/physics/extract.ledger.txt`
+
+## Layout/noise flags in claims
+Downstream claims (`uhd/scripts/physics_claims_build.py`) attach two fields per line:
+- `is_layout_noise` (boolean): true for lines likely from PDF layout artifacts (empty/very short/mostly non‑alphanumeric/glyph‑heavy).
+- `layout_tags` (list): stable tags explaining which heuristic triggered (e.g., `layout:short`, `layout:glyphs`).
+
+These flags quarantine such lines from physics corrections, preserving auditability.
