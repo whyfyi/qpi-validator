@@ -82,9 +82,9 @@
         "name": "field",
         "statement": "Tag field mentions",
         "match": [
-          " field ",
-          "field:",
-          "field"
+          "gravitational field",
+          "gravity field",
+          "gravitational potential"
         ],
         "transform": {
           "add_tags": [
