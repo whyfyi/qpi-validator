@@ -3,22 +3,163 @@
     "version": "1.0.0",
     "ruleset_id": "QGL.v1",
     "purpose": "Starter Quantum Geometric Light tagging rules (substring, case-insensitive).",
-    "nonnegotiables": ["Tracked rules", "No external network access"],
+    "nonnegotiables": [
+      "Tracked rules",
+      "No external network access"
+    ],
     "rule_format": "claim_substring_ci_v1",
     "rules": [
-      {"id": "QGL-001", "name": "light", "statement": "Tag light mentions", "match": ["light", "electromagnetic"], "transform": {"add_tags": ["QGL:light"]}, "receipt_requirements": ["hit"]},
-      {"id": "QGL-002", "name": "photon", "statement": "Tag photons", "match": ["photon"], "transform": {"add_tags": ["QGL:photon"]}, "receipt_requirements": ["hit"]},
-      {"id": "QGL-003", "name": "wave", "statement": "Tag waves", "match": [" wave ", "waves", "wave:" , "standing wave"], "transform": {"add_tags": ["QGL:wave", "QGL:standing_wave"]}, "receipt_requirements": ["hit"]},
-      {"id": "QGL-004", "name": "interference", "statement": "Tag interference", "match": ["interference"], "transform": {"add_tags": ["QGL:interference"]}, "receipt_requirements": ["hit"]},
-      {"id": "QGL-005", "name": "frequency", "statement": "Tag frequency", "match": ["frequency", "frequencies"], "transform": {"add_tags": ["QGL:frequency"]}, "receipt_requirements": ["hit"]},
-      {"id": "QGL-006", "name": "phase", "statement": "Tag phase", "match": ["phase", "phase shift"], "transform": {"add_tags": ["QGL:phase"]}, "receipt_requirements": ["hit"]},
-      {"id": "QGL-007", "name": "quantization", "statement": "Tag quantization", "match": ["quantization", "quantised", "quantized"], "transform": {"add_tags": ["QGL:quantization"]}, "receipt_requirements": ["hit"]},
-      {"id": "QGL-008", "name": "energy/momentum", "statement": "Tag energy and momentum", "match": ["energy", "momentum"], "transform": {"add_tags": ["QGL:wave", "QGL:photon"]}, "receipt_requirements": ["hit"]}
+      {
+        "id": "QGL-001",
+        "name": "light",
+        "statement": "Tag light mentions",
+        "match": [
+          "light",
+          "electromagnetic"
+        ],
+        "transform": {
+          "add_tags": [
+            "QGL:light"
+          ],
+          "recommended_rewrite": "Light/electromagnetic mentions: frame as information/propagation model candidate where appropriate."
+        },
+        "receipt_requirements": [
+          "hit"
+        ]
+      },
+      {
+        "id": "QGL-002",
+        "name": "photon",
+        "statement": "Tag photons",
+        "match": [
+          "photon"
+        ],
+        "transform": {
+          "add_tags": [
+            "QGL:photon"
+          ],
+          "recommended_rewrite": "Photon context: suggest hypothesis wording for quantum light quanta in the given framing."
+        },
+        "receipt_requirements": [
+          "hit"
+        ]
+      },
+      {
+        "id": "QGL-003",
+        "name": "wave",
+        "statement": "Tag waves",
+        "match": [
+          " wave ",
+          "waves",
+          "wave:",
+          "standing wave"
+        ],
+        "transform": {
+          "add_tags": [
+            "QGL:wave",
+            "QGL:standing_wave"
+          ],
+          "recommended_rewrite": "Wave/standing wave: present as model framing; avoid claims of exclusivity."
+        },
+        "receipt_requirements": [
+          "hit"
+        ]
+      },
+      {
+        "id": "QGL-004",
+        "name": "interference",
+        "statement": "Tag interference",
+        "match": [
+          "interference"
+        ],
+        "transform": {
+          "add_tags": [
+            "QGL:interference"
+          ],
+          "recommended_rewrite": "Interference: emphasize pattern interpretation under wave model; hypothesis language."
+        },
+        "receipt_requirements": [
+          "hit"
+        ]
+      },
+      {
+        "id": "QGL-005",
+        "name": "frequency",
+        "statement": "Tag frequency",
+        "match": [
+          "frequency",
+          "frequencies"
+        ],
+        "transform": {
+          "add_tags": [
+            "QGL:frequency"
+          ]
+        },
+        "receipt_requirements": [
+          "hit"
+        ]
+      },
+      {
+        "id": "QGL-006",
+        "name": "phase",
+        "statement": "Tag phase",
+        "match": [
+          "phase",
+          "phase shift"
+        ],
+        "transform": {
+          "add_tags": [
+            "QGL:phase"
+          ]
+        },
+        "receipt_requirements": [
+          "hit"
+        ]
+      },
+      {
+        "id": "QGL-007",
+        "name": "quantization",
+        "statement": "Tag quantization",
+        "match": [
+          "quantization",
+          "quantised",
+          "quantized"
+        ],
+        "transform": {
+          "add_tags": [
+            "QGL:quantization"
+          ],
+          "recommended_rewrite": "Quantization: suggest cautious phrasing as model property under specific conditions."
+        },
+        "receipt_requirements": [
+          "hit"
+        ]
+      },
+      {
+        "id": "QGL-008",
+        "name": "energy/momentum",
+        "statement": "Tag energy and momentum",
+        "match": [
+          "energy",
+          "momentum"
+        ],
+        "transform": {
+          "add_tags": [
+            "QGL:wave",
+            "QGL:photon"
+          ]
+        },
+        "receipt_requirements": [
+          "hit"
+        ]
+      }
     ]
   },
   "so_below": {
     "version": "v1",
     "purpose_human": "QGL substring rules tagging light-related claims.",
-    "ux_notes": ["Extend by adding more 'match' strings and tags."]
+    "ux_notes": [
+      "Extend by adding more 'match' strings and tags."
+    ]
   }
 }
