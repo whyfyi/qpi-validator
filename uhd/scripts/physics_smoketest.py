@@ -18,6 +18,8 @@ FIXTURE = "uhd/fixtures/physics_claims_synthetic.jsonl"
 FIXTURE_NOISY = "uhd/fixtures/physics_claims_noisy_synthetic.jsonl"
 APPLY = ["python3", "uhd/scripts/physics_corrections_apply.py"]
 OUT = "uhd/receipts/physics_corrections/corrections.latest.jsonl"
+REPORT = ["python3", "uhd/scripts/physics_corrections_report.py"]
+REPORT_MD = "uhd/receipts/physics_corrections/report.latest.md"
 
 
 def run_apply(claims_path: str) -> None:
@@ -27,6 +29,13 @@ def run_apply(claims_path: str) -> None:
         print(r.stdout)
         print(r.stderr, file=sys.stderr)
         raise SystemExit(f"apply failed: {r.returncode}")
+
+def run_report() -> None:
+    r = subprocess.run(REPORT, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    if r.returncode != 0:
+        print(r.stdout)
+        print(r.stderr, file=sys.stderr)
+        raise SystemExit(f"report failed: {r.returncode}")
 
 
 def verify_output(out_path: str) -> bytes:
@@ -84,6 +93,23 @@ def main() -> int:
     n = count_noise()
     if n < 3:
         raise SystemExit(f"expected at least 3 noise lines, got {n}")
+    # Report exists and sections present, and no timestamps inside MD
+    run_report()
+    if not os.path.exists(REPORT_MD):
+        raise SystemExit("report.latest.md not found")
+    with open(REPORT_MD, "r", encoding="utf-8") as f:
+        md = f.read()
+    required = [
+        "## Top layout tags",
+        "## Top rule hits",
+        "## Top recommended rewrites",
+        "## Top 50 entries",
+    ]
+    for h in required:
+        if h not in md:
+            raise SystemExit(f"missing section in report: {h}")
+    if ("T" in md and "Z" in md) or "+00:00" in md:
+        raise SystemExit("report appears to contain timestamps")
     print("SMOKETEST OK")
     return 0
 

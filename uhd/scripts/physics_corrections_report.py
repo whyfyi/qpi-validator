@@ -13,7 +13,7 @@ import sys
 import hashlib
 import datetime as _dt
 from collections import Counter
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Tuple
 
 IN_JSONL = "uhd/receipts/physics_corrections/corrections.latest.jsonl"
 OUT_MD = "uhd/receipts/physics_corrections/report.latest.md"
@@ -59,11 +59,36 @@ def write_md(path: str, claims: List[Dict[str, Any]]) -> None:
     tagged = sum(1 for c in claims if isinstance(c.get("model_tags"), list) and c.get("model_tags"))
     noise = sum(1 for c in claims if c.get("is_layout_noise") is True)
     tag_counter: Counter = Counter()
+    layout_counter: Counter = Counter()
+    rulehit_counter: Counter = Counter()
+    rewrite_counter: Counter = Counter()
     for c in claims:
         tags = c.get("model_tags") or []
         if isinstance(tags, list):
             tag_counter.update(str(t) for t in tags)
-    top_tags = tag_counter.most_common(20)
+        if c.get("is_layout_noise") is True:
+            lts = c.get("layout_tags") or []
+            if isinstance(lts, list):
+                layout_counter.update(str(t) for t in lts)
+        rhs = c.get("rule_hits") or []
+        if isinstance(rhs, list):
+            for h in rhs:
+                if isinstance(h, dict):
+                    key = f"{(h.get('ruleset_id') or 'NA')}:{(h.get('rule_id') or 'NA')}"
+                    rulehit_counter.update([key])
+        recs = c.get("recommended_rewrites") or []
+        if isinstance(recs, list):
+            rewrite_counter.update(str(r) for r in recs)
+
+    def _top(counter: Counter) -> List[Tuple[str, int]]:
+        items = list(counter.items())
+        items.sort(key=lambda kv: (-kv[1], kv[0]))
+        return items[:20]
+
+    top_tags = _top(tag_counter)
+    top_layout = _top(layout_counter)
+    top_rulehits = _top(rulehit_counter)
+    top_rewrites = _top(rewrite_counter)
 
     with open(path, "w", encoding="utf-8") as f:
         f.write("# Physics Corrections Report\n\n")
@@ -74,6 +99,16 @@ def write_md(path: str, claims: List[Dict[str, Any]]) -> None:
         f.write("- Top 20 tags:\n")
         for tag, cnt in top_tags:
             f.write(f"  - {tag}: {cnt}\n")
+        f.write("\n## Top layout tags\n")
+        for tag, cnt in top_layout:
+            f.write(f"- {tag}: {cnt}\n")
+        f.write("\n## Top rule hits\n")
+        for key, cnt in top_rulehits:
+            f.write(f"- {key}: {cnt}\n")
+        f.write("\n## Top recommended rewrites\n")
+        for rw, cnt in top_rewrites:
+            disp = rw if len(rw) <= 120 else rw[:119] + '…'
+            f.write(f"- {disp}: {cnt}\n")
         f.write("\n## Top 50 entries\n")
         ordered = (
             [c for c in claims if (isinstance(c.get('model_tags'), list) and c.get('model_tags') and not c.get('is_layout_noise'))]
