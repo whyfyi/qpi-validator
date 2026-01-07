@@ -1,0 +1,24 @@
+{
+  "as_above": {
+    "version": "1.0.0",
+    "ruleset_id": "QGG.v1",
+    "purpose": "Starter Quantum Geometric Gravity tagging rules (substring, case-insensitive).",
+    "nonnegotiables": ["Tracked rules", "No external network access"],
+    "rule_format": "claim_substring_ci_v1",
+    "rules": [
+      {"id": "QGG-001", "name": "gravity keyword", "statement": "Tag claims mentioning gravity", "match": ["gravity"], "transform": {"add_tags": ["QGG:gravity"]}, "receipt_requirements": ["hit"]},
+      {"id": "QGG-002", "name": "gravit* stem", "statement": "Tag gravit* stems (gravitational, gravitation)", "match": ["gravit"], "transform": {"add_tags": ["QGG:gravity"]}, "receipt_requirements": ["hit"]},
+      {"id": "QGG-003", "name": "geometry", "statement": "Tag geometry-related lines", "match": ["geometr"], "transform": {"add_tags": ["QGG:geometry"]}, "receipt_requirements": ["hit"]},
+      {"id": "QGG-004", "name": "curvature", "statement": "Tag curvature mentions", "match": ["curvature", "curved spacetime"], "transform": {"add_tags": ["QGG:curvature"]}, "receipt_requirements": ["hit"]},
+      {"id": "QGG-005", "name": "field", "statement": "Tag field mentions", "match": [" field " , "field:" , "field"], "transform": {"add_tags": ["QGG:field"]}, "receipt_requirements": ["hit"]},
+      {"id": "QGG-006", "name": "frame/inertial", "statement": "Tag inertial frames", "match": ["inertial", "frame of reference", "non-inertial"], "transform": {"add_tags": ["QGG:frame", "QGG:inertial"]}, "receipt_requirements": ["hit"]},
+      {"id": "QGG-007", "name": "relativity", "statement": "Tag relativity mentions", "match": ["relativity", "relativistic"], "transform": {"add_tags": ["QGG:frame"]}, "receipt_requirements": ["hit"]},
+      {"id": "QGG-008", "name": "ether candidate", "statement": "Tag ether candidate contexts", "match": ["ether", "aether"], "transform": {"add_tags": ["QGG:ether_candidate"]}, "receipt_requirements": ["hit"]}
+    ]
+  },
+  "so_below": {
+    "version": "v1",
+    "purpose_human": "QGG substring rules tagging gravity/geometry related claims.",
+    "ux_notes": ["Extend by adding more 'match' strings and tags."]
+  }
+}

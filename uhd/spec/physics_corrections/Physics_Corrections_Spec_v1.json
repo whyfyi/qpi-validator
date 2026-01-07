@@ -9,11 +9,34 @@
     ],
     "inputs": {
       "artifacts": [
-        { "name": "claims_latest", "path": "uhd/receipts/physics_claims/claims.latest.jsonl" },
-        { "name": "CCR_Core_Axioms_v1", "path": "uhd/spec/physics_corrections/CCR_Core_Axioms_v1.json" },
-        { "name": "QPhiD_Rules_v1", "path": "uhd/spec/physics_corrections/QPhiD_Rules_v1.json" },
-        { "name": "QGC_Rules_v1", "path": "uhd/spec/physics_corrections/QGC_Rules_v1.json" },
-        { "name": "AngleClock_Model_v1", "path": "uhd/spec/physics_corrections/AngleClock_Model_v1.json" }
+        {
+          "name": "claims_latest",
+          "path": "uhd/receipts/physics_claims/claims.latest.jsonl"
+        },
+        {
+          "name": "CCR_Core_Axioms_v1",
+          "path": "uhd/spec/physics_corrections/CCR_Core_Axioms_v1.json"
+        },
+        {
+          "name": "QPhiD_Rules_v1",
+          "path": "uhd/spec/physics_corrections/QPhiD_Rules_v1.json"
+        },
+        {
+          "name": "QGC_Rules_v1",
+          "path": "uhd/spec/physics_corrections/QGC_Rules_v1.json"
+        },
+        {
+          "name": "AngleClock_Model_v1",
+          "path": "uhd/spec/physics_corrections/AngleClock_Model_v1.json"
+        },
+        {
+          "name": "QGG_Rules_v1",
+          "path": "uhd/spec/physics_corrections/QGG_Rules_v1.json"
+        },
+        {
+          "name": "QGL_Rules_v1",
+          "path": "uhd/spec/physics_corrections/QGL_Rules_v1.json"
+        }
       ],
       "parameters": {
         "hash_algorithm": "sha256"
@@ -48,7 +71,9 @@
     ],
     "inputs_friendly": {
       "artifact": "claims.latest.jsonl",
-      "parameters": { "hash": "sha256" }
+      "parameters": {
+        "hash": "sha256"
+      }
     },
     "outputs_friendly": "Writes corrections.latest.jsonl and updates corrections.ledger.txt (local receipts)",
     "success_criteria": [

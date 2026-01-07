@@ -37,3 +37,16 @@ For CCR Core Axioms:
 
 The apply script currently produces deterministic `rule_hits` for each claim and
 writes local-only outputs under `uhd/receipts/physics_corrections/` (ignored by Git).
+
+## QGG/QGL rule format
+- Rulesets live under `uhd/spec/physics_corrections/` with CCR-style actionable format.
+- Top-level keys: `as_above` / `so_below`.
+- `as_above` fields: `version`, `ruleset_id`, `purpose`, `nonnegotiables`, `rule_format`, `rules[]`.
+- Each rule: `id`, `name`, `statement`, `match` (case-insensitive substring over claim_text), `transform` (with `add_tags` list and optional `recommended_rewrite`), and `receipt_requirements` (non-empty list).
+- Current tracked rulesets: `QGG_Rules_v1.json` and `QGL_Rules_v1.json`.
+
+To add a rule
+1. Pick a unique `id` and add a descriptive `name` and `statement`.
+2. Add one or more `match` substrings.
+3. Add `transform.add_tags` with new or existing domain tags.
+4. Keep `receipt_requirements` non-empty (e.g., `["hit"]`).

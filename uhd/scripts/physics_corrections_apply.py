@@ -1,35 +1,38 @@
 #!/usr/bin/env python3
 """
-Physics Corrections Apply v1 (deterministic scaffold -> actionable)
-- Reads:  uhd/receipts/physics_claims/claims.latest.jsonl
-- Loads tracked rule specs:
-    - uhd/spec/physics_corrections/CCR_Core_Axioms_v1.json
-    - uhd/spec/physics_corrections/QPhiD_Rules_v1.json
-    - uhd/spec/physics_corrections/QGC_Rules_v1.json
-    - uhd/spec/physics_corrections/AngleClock_Model_v1.json
-- Writes (local-only, ignored by git):
-    - uhd/receipts/physics_corrections/corrections.latest.jsonl
-    - uhd/receipts/physics_corrections/corrections.ledger.txt  (sha256 receipts)
+Physics Corrections v1 — scaffold apply with rules
+- Verifies presence of tracked rule files
+- Requires local claims.latest.jsonl; if missing, exits with guidance
+- Applies rulesets (substring, case-insensitive) deterministically
+- Pass-through fields preserved; adds rule_hits and model_tags
+- Writes receipts (overwrite ledger) with sha256 of inputs+rules+output
 Stdlib only. No network.
 """
 
-import datetime as _dt
 import hashlib
 import json
 import os
 import sys
-from typing import Any, Dict, List, Tuple
+import datetime as _dt
+from typing import List, Dict, Any
 
-CLAIMS_IN = "uhd/receipts/physics_claims/claims.latest.jsonl"
+SPEC_PATH = "uhd/spec/physics_corrections/Physics_Corrections_Spec_v1.json"
+CLAIMS_PATH = "uhd/receipts/physics_claims/claims.latest.jsonl"
+RULE_ORDER = [
+    ("uhd/spec/physics_corrections/CCR_Core_Axioms_v1.json", "CCR.v1"),
+    ("uhd/spec/physics_corrections/QPhiD_Rules_v1.json", "QPhiD.v1"),
+    ("uhd/spec/physics_corrections/QGC_Rules_v1.json", "QGC.v1"),
+    ("uhd/spec/physics_corrections/AngleClock_Model_v1.json", "AngleClock.v1"),
+    ("uhd/spec/physics_corrections/QGG_Rules_v1.json", "QGG.v1"),
+    ("uhd/spec/physics_corrections/QGL_Rules_v1.json", "QGL.v1"),
+]
 OUT_JSONL = "uhd/receipts/physics_corrections/corrections.latest.jsonl"
 LEDGER = "uhd/receipts/physics_corrections/corrections.ledger.txt"
 
-RULE_FILES = [
-    "uhd/spec/physics_corrections/CCR_Core_Axioms_v1.json",
-    "uhd/spec/physics_corrections/QPhiD_Rules_v1.json",
-    "uhd/spec/physics_corrections/QGC_Rules_v1.json",
-    "uhd/spec/physics_corrections/AngleClock_Model_v1.json",
-]
+
+def utc_now_iso() -> str:
+    return _dt.datetime.now(_dt.timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+
 
 def sha256_file(path: str) -> str:
     h = hashlib.sha256()
@@ -38,117 +41,136 @@ def sha256_file(path: str) -> str:
             h.update(chunk)
     return h.hexdigest()
 
-def utc_ts() -> str:
-    return _dt.datetime.now(_dt.timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
-def load_json(path: str) -> Any:
-    with open(path, "r", encoding="utf-8") as f:
-        return json.load(f)
+def require_rules_exist(paths: List[str]) -> None:
+    missing = [p for p in paths if not os.path.exists(p)]
+    if missing:
+        print("Missing required rule spec file(s):", file=sys.stderr)
+        for p in missing:
+            print(f" - {p}", file=sys.stderr)
+        sys.exit(2)
 
-def extract_claim_text(obj: Any) -> str:
-    # tolerant extraction across possible keys
-    if isinstance(obj, str):
-        return obj
-    if not isinstance(obj, dict):
-        return str(obj)
 
-    for k in ["claim_text", "claim", "text", "statement", "line", "content"]:
+def ensure_claims_exists(path: str) -> None:
+    if not os.path.exists(path):
+        msg = (
+            "Claims file not found. Run prior stages:\n"
+            "  1) python3 uhd/scripts/physics_extract_text.py --pdf uhd/imports/physics/Halliday_Cheatsheet.pdf\n"
+            "  2) python3 uhd/scripts/physics_claims_build.py\n"
+        )
+        print(msg, file=sys.stderr)
+        sys.exit(2)
+
+
+def load_ruleset(path: str) -> Dict[str, Any]:
+    with open(path, 'r', encoding='utf-8') as f:
+        rs = json.load(f)
+    aa = rs.get('as_above', {})
+    rules = aa.get('rules', [])
+    # Normalize rule match to list[str]
+    for r in rules:
+        m = r.get('match', [])
+        if isinstance(m, str):
+            r['match'] = [m]
+        elif isinstance(m, list):
+            r['match'] = [str(x) for x in m]
+        else:
+            r['match'] = []
+        tf = r.get('transform', {})
+        tags = tf.get('add_tags', [])
+        if isinstance(tags, str):
+            tf['add_tags'] = [tags]
+        elif isinstance(tags, list):
+            tf['add_tags'] = [str(x) for x in tags]
+        else:
+            tf['add_tags'] = []
+        r['transform'] = tf
+    return rs
+
+
+def claim_text_from(obj: Dict[str, Any]) -> str:
+    for k in ('claim_text', 'text', 'statement', 'raw_line'):
         v = obj.get(k)
         if isinstance(v, str) and v.strip():
             return v
+    return json.dumps(obj, ensure_ascii=False)
 
-    # fallback: stable representation
-    return json.dumps(obj, sort_keys=True, ensure_ascii=False)
 
-def build_ccr_matchers(ccr: Dict[str, Any]) -> List[Tuple[str, List[str]]]:
-    aa = ccr.get("as_above", {})
-    rules = aa.get("rules", [])
-    out: List[Tuple[str, List[str]]] = []
-    for r in rules:
-        rid = r.get("id", "")
-        match = r.get("match", {}) if isinstance(r, dict) else {}
-        kws = match.get("any_keywords", [])
-        if isinstance(rid, str) and rid and isinstance(kws, list):
-            clean = [str(x).strip().lower() for x in kws if str(x).strip()]
-            out.append((rid, clean))
-    # deterministic order
-    out.sort(key=lambda t: t[0])
+def apply_rules(obj: Dict[str, Any], rulesets: List[Dict[str, Any]]) -> Dict[str, Any]:
+    text_ci = claim_text_from(obj).lower()
+    hits = []
+    tags: List[str] = []
+    for rs in rulesets:
+        rs_id = rs.get('as_above', {}).get('ruleset_id') or rs.get('so_below', {}).get('version', 'unknown')
+        for r in rs.get('as_above', {}).get('rules', []):
+            rid = r.get('id')
+            for needle in r.get('match', []):
+                if needle.lower() in text_ci:
+                    hits.append({"ruleset_id": rs_id, "rule_id": rid})
+                    tags.extend(r.get('transform', {}).get('add_tags', []))
+                    break
+    # Deduplicate + sort tags
+    tags = sorted(set(tags))
+    # Deterministic output: build in fixed key order
+    out = {
+        "id": obj.get("id"),
+        "kind": obj.get("kind"),
+        "text": obj.get("text"),
+        "normalized_text": obj.get("normalized_text"),
+        "source_span": obj.get("source_span"),
+        "rule_hits": hits,
+        "model_tags": tags,
+    }
+    # Carry over any other original keys without timestamps, in stable order
+    for k in sorted(obj.keys()):
+        if k in out:
+            continue
+        out[k] = obj[k]
     return out
 
-def rule_hits_for_text(matchers: List[Tuple[str, List[str]]], text: str) -> List[str]:
-    t = text.lower()
-    hits: List[str] = []
-    for rid, kws in matchers:
-        for kw in kws:
-            if kw and kw in t:
-                hits.append(rid)
-                break
-    return hits
 
-def ensure_dirs() -> None:
-    os.makedirs(os.path.dirname(OUT_JSONL), exist_ok=True)
+def write_ledger(paths: List[str]) -> None:
+    ts = utc_now_iso()
     os.makedirs(os.path.dirname(LEDGER), exist_ok=True)
+    with open(LEDGER, "w", encoding="utf-8") as f:
+        for p in paths:
+            f.write(f"{sha256_file(p)}  {p}  {ts}\n")
+
 
 def main() -> int:
-    # Preconditions
-    if not os.path.exists(CLAIMS_IN):
-        raise SystemExit(f"claims.latest.jsonl not found: {CLAIMS_IN}\nRun physics_extract_text.py then physics_claims_build.py first.")
+    if not os.path.exists(SPEC_PATH):
+        print(f"Spec not found: {SPEC_PATH}", file=sys.stderr)
+        return 2
 
-    for rf in RULE_FILES:
-        if not os.path.exists(rf):
-            raise SystemExit(f"Missing required rule file: {rf}")
+    rule_paths = [p for p,_ in RULE_ORDER]
+    require_rules_exist(rule_paths)
+    ensure_claims_exists(CLAIMS_PATH)
 
-    ccr = load_json(RULE_FILES[0])
-    ccr_matchers = build_ccr_matchers(ccr)
+    # Load rules in fixed order
+    rulesets = [load_ruleset(p) for p,_ in RULE_ORDER]
 
-    ensure_dirs()
-
-    count = 0
-    with open(CLAIMS_IN, "r", encoding="utf-8") as fin, open(OUT_JSONL, "w", encoding="utf-8") as fout:
+    os.makedirs(os.path.dirname(OUT_JSONL), exist_ok=True)
+    written = 0
+    with open(CLAIMS_PATH, 'r', encoding='utf-8', errors='replace') as fin, \
+         open(OUT_JSONL, 'w', encoding='utf-8') as fout:
         for line in fin:
-            line = line.rstrip("\n")
-            if not line.strip():
+            line = line.strip()
+            if not line:
                 continue
-            obj = json.loads(line)
-            txt = extract_claim_text(obj)
+            try:
+                obj = json.loads(line)
+            except Exception:
+                continue
+            out = apply_rules(obj, rulesets)
+            fout.write(json.dumps(out, ensure_ascii=False) + "\n")
+            written += 1
 
-            hits = rule_hits_for_text(ccr_matchers, txt)
+    ledger_paths = [CLAIMS_PATH, *rule_paths, OUT_JSONL]
+    write_ledger(ledger_paths)
 
-            out = {
-                "source": "halliday_cheatsheet",
-                "claim": obj,
-                "claim_text": txt,
-                "rule_hits": hits,
-                "correction_status": "scaffold_applied",
-                "notes": "rule_hits are deterministic keyword matches; replace/extend rules with canonical CCR/QPhiD/QGC/AngleClock content."
-            }
-            fout.write(json.dumps(out, ensure_ascii=False, sort_keys=True) + "\n")
-            count += 1
-
-    ts = utc_ts()
-    inputs = [CLAIMS_IN] + RULE_FILES
-    outputs = [OUT_JSONL]
-
-    lines = []
-    for p in inputs + outputs:
-        lines.append(f"{sha256_file(p)}  {p}  {ts}")
-
-    with open(LEDGER, "a", encoding="utf-8") as f:
-        for ln in lines:
-            f.write(ln + "\n")
-
-    print(f"Corrections written: {OUT_JSONL} (count={count})")
-    print(f"Ledger: {LEDGER}")
+    print(f"Corrections written: {OUT_JSONL} (count={written})\nLedger: {LEDGER}")
     return 0
 
+
 if __name__ == "__main__":
-    try:
-        sys.exit(main())
-    except SystemExit as e:
-        msg = str(e)
-        if msg:
-            print(msg, file=sys.stderr)
-        raise
-    except Exception as e:
-        print(f"ERROR: {e}", file=sys.stderr)
-        sys.exit(2)
+    sys.exit(main())
