@@ -73,7 +73,7 @@ def write_md(path: str, claims: List[Dict[str, Any]]) -> None:
         for tag, cnt in top_tags:
             f.write(f"  - {tag}: {cnt}\n")
         f.write("\n## Top 50 entries\n")
-        for c in claims[:50]:
+        for c in ([c for c in claims if (isinstance(c.get('model_tags'), list) and c.get('model_tags'))] + [c for c in claims if not (isinstance(c.get('model_tags'), list) and c.get('model_tags'))])[:50]:
             rid = c.get("id")
             kind = c.get("kind")
             text = c.get("text") or c.get("normalized_text") or ""

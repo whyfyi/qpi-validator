@@ -1,0 +1,52 @@
+{
+  "version": "1.0.0",
+  "description": "WhyFYI OS term groups for CCR/QPhiD/QGC/AngleClock/QGG/QGL (curated, minimal).",
+  "groups": [
+    {
+      "id": "CCR",
+      "label": "Core Corrections Rules",
+      "terms": [
+        { "id": "axiom-caution", "label": "cautionary axiom", "synonyms": ["guardrail"], "notes": "Use to tag statements requiring caution in interpretation." }
+      ]
+    },
+    {
+      "id": "QPhiD",
+      "label": "Quantum Phi Dynamics",
+      "terms": [
+        { "id": "phi-symmetry", "label": "phi symmetry", "synonyms": ["golden ratio"], "notes": "Model-level symmetry concept; interpretive." }
+      ]
+    },
+    {
+      "id": "QGC",
+      "label": "Quantum Geometric Corrections",
+      "terms": [
+        { "id": "geometry-correction", "label": "geometry correction", "synonyms": ["geometric adjustment"], "notes": "Geometry-first framing of corrections." }
+      ]
+    },
+    {
+      "id": "AngleClock",
+      "label": "Angle Clock",
+      "terms": [
+        { "id": "angle-phase", "label": "angle-phase", "synonyms": ["clock phase"], "notes": "Phase/angle mapping construct for timing models." }
+      ]
+    },
+    {
+      "id": "QGG",
+      "label": "Quantum Geometric Gravity",
+      "terms": [
+        { "id": "gravity", "label": "gravity", "synonyms": ["gravitation", "gravitational"], "notes": "Domain anchor." },
+        { "id": "curvature", "label": "curvature", "synonyms": ["curved spacetime"], "notes": "Geometric interpretation candidate." },
+        { "id": "inertial-frame", "label": "inertial frame", "synonyms": ["frame of reference"], "notes": "Kinematic framing." }
+      ]
+    },
+    {
+      "id": "QGL",
+      "label": "Quantum Geometric Light",
+      "terms": [
+        { "id": "light", "label": "light", "synonyms": ["electromagnetic"], "notes": "Domain anchor." },
+        { "id": "photon", "label": "photon", "synonyms": ["light quantum"], "notes": "Quantum carrier." },
+        { "id": "interference", "label": "interference", "synonyms": ["superposition pattern"], "notes": "Wave model behavior." }
+      ]
+    }
+  ]
+}
