@@ -14,6 +14,7 @@ import json
 import os
 import sys
 import datetime as _dt
+import argparse
 from typing import List, Dict, Any
 
 SPEC_PATH = "uhd/spec/physics_corrections/Physics_Corrections_Spec_v1.json"
@@ -138,20 +139,23 @@ def write_ledger(paths: List[str]) -> None:
 
 
 def main() -> int:
+    parser = argparse.ArgumentParser(description="Apply physics corrections")
+    parser.add_argument("--claims", default=CLAIMS_PATH, help="Path to claims.latest.jsonl")
+    args = parser.parse_args()
     if not os.path.exists(SPEC_PATH):
         print(f"Spec not found: {SPEC_PATH}", file=sys.stderr)
         return 2
 
     rule_paths = [p for p,_ in RULE_ORDER]
     require_rules_exist(rule_paths)
-    ensure_claims_exists(CLAIMS_PATH)
+    ensure_claims_exists(args.claims)
 
     # Load rules in fixed order
     rulesets = [load_ruleset(p) for p,_ in RULE_ORDER]
 
     os.makedirs(os.path.dirname(OUT_JSONL), exist_ok=True)
     written = 0
-    with open(CLAIMS_PATH, 'r', encoding='utf-8', errors='replace') as fin, \
+    with open(args.claims, 'r', encoding='utf-8', errors='replace') as fin, \
          open(OUT_JSONL, 'w', encoding='utf-8') as fout:
         for line in fin:
             line = line.strip()
@@ -165,7 +169,7 @@ def main() -> int:
             fout.write(json.dumps(out, ensure_ascii=False) + "\n")
             written += 1
 
-    ledger_paths = [CLAIMS_PATH, *rule_paths, OUT_JSONL]
+    ledger_paths = [args.claims, *rule_paths, OUT_JSONL]
     write_ledger(ledger_paths)
 
     print(f"Corrections written: {OUT_JSONL} (count={written})\nLedger: {LEDGER}")

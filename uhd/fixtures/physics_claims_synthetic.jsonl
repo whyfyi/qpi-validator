@@ -1,0 +1,25 @@
+{"id":"1","kind":"definition","text":"Gravity is the attraction between masses."}
+{"id":"2","kind":"equation","text":"F = G m1 m2 / r^2 expresses gravitational force."}
+{"id":"3","kind":"note","text":"Light exhibits both wave and particle properties."}
+{"id":"4","kind":"definition","text":"A photon is a quantum of electromagnetic radiation."}
+{"id":"5","kind":"equation","text":"E = h f relates energy and frequency."}
+{"id":"6","kind":"definition","text":"Interference occurs when waves superpose."}
+{"id":"7","kind":"definition","text":"Standing wave forms in resonant cavities."}
+{"id":"8","kind":"definition","text":"Momentum is conserved in isolated systems."}
+{"id":"9","kind":"note","text":"Relativity connects space and time geometry."}
+{"id":"10","kind":"definition","text":"An inertial frame is non-accelerating."}
+{"id":"11","kind":"definition","text":"Phase describes a point in a wave cycle."}
+{"id":"12","kind":"note","text":"Curvature of spacetime explains gravitation in general relativity."}
+{"id":"13","kind":"definition","text":"A field assigns a value to every point in space and time."}
+{"id":"14","kind":"definition","text":"Frequency is cycles per second (Hz)."}
+{"id":"15","kind":"definition","text":"Electromagnetic waves propagate at speed c in vacuum."}
+{"id":"16","kind":"definition","text":"Energy and momentum are related for photons by E=pc."}
+{"id":"17","kind":"note","text":"Non-inertial frames include fictitious forces."}
+{"id":"18","kind":"definition","text":"Aether was a historical hypothesis for light propagation."}
+{"id":"19","kind":"definition","text":"Geometry studies shapes, sizes, and properties of space."}
+{"id":"20","kind":"note","text":"Phase shift changes interference patterns."}
+{"id":"21","kind":"definition","text":"Curved spacetime replaces gravitational force in GR."}
+{"id":"22","kind":"definition","text":"Wave frequency and wavelength are inversely related."}
+{"id":"23","kind":"note","text":"Inertial frames are equivalent in special relativity."}
+{"id":"24","kind":"definition","text":"A standing wave has nodes and antinodes."}
+{"id":"25","kind":"note","text":"Photon energy increases with frequency."}
