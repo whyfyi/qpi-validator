@@ -15,6 +15,7 @@ import sys
 import tempfile
 
 FIXTURE = "uhd/fixtures/physics_claims_synthetic.jsonl"
+FIXTURE_NOISY = "uhd/fixtures/physics_claims_noisy_synthetic.jsonl"
 APPLY = ["python3", "uhd/scripts/physics_corrections_apply.py"]
 OUT = "uhd/receipts/physics_corrections/corrections.latest.jsonl"
 
@@ -51,16 +52,38 @@ def verify_output(out_path: str) -> bytes:
     return b
 
 
-def main() -> int:
+def run_once(fixture: str) -> bytes:
+    import tempfile, shutil, os
     with tempfile.TemporaryDirectory() as td:
         claims = os.path.join(td, "claims.latest.jsonl")
-        shutil.copyfile(FIXTURE, claims)
+        shutil.copyfile(fixture, claims)
         run_apply(claims)
-        first = verify_output(OUT)
-        run_apply(claims)
-        second = verify_output(OUT)
-        if first != second:
-            raise SystemExit("outputs differ between runs")
+        return verify_output(OUT)
+
+def count_noise() -> int:
+    import json
+    c = 0
+    with open(OUT, "r", encoding="utf-8") as f:
+        for line in f:
+            if not line.strip():
+                continue
+            obj = json.loads(line)
+            if obj.get("is_layout_noise") is True:
+                c += 1
+    return c
+
+def main() -> int:
+    # Determinism on clean synthetic fixture
+    first = run_once(FIXTURE)
+    second = run_once(FIXTURE)
+    if first != second:
+        raise SystemExit("outputs differ between runs (synthetic)")
+
+    # Noise assertions on noisy fixture
+    run_once(FIXTURE_NOISY)
+    n = count_noise()
+    if n < 3:
+        raise SystemExit(f"expected at least 3 noise lines, got {n}")
     print("SMOKETEST OK")
     return 0
 

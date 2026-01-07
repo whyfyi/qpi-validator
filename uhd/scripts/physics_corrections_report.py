@@ -57,6 +57,7 @@ def write_md(path: str, claims: List[Dict[str, Any]]) -> None:
     os.makedirs(os.path.dirname(path), exist_ok=True)
     total = len(claims)
     tagged = sum(1 for c in claims if isinstance(c.get("model_tags"), list) and c.get("model_tags"))
+    noise = sum(1 for c in claims if c.get("is_layout_noise") is True)
     tag_counter: Counter = Counter()
     for c in claims:
         tags = c.get("model_tags") or []
@@ -69,11 +70,17 @@ def write_md(path: str, claims: List[Dict[str, Any]]) -> None:
         f.write("## Summary counts\n")
         f.write(f"- Total claims: {total}\n")
         f.write(f"- Tagged claims: {tagged}\n")
+        f.write("- Noise (layout) lines: %d\n" % noise)
         f.write("- Top 20 tags:\n")
         for tag, cnt in top_tags:
             f.write(f"  - {tag}: {cnt}\n")
         f.write("\n## Top 50 entries\n")
-        for c in ([c for c in claims if (isinstance(c.get('model_tags'), list) and c.get('model_tags'))] + [c for c in claims if not (isinstance(c.get('model_tags'), list) and c.get('model_tags'))])[:50]:
+        ordered = (
+            [c for c in claims if (isinstance(c.get('model_tags'), list) and c.get('model_tags') and not c.get('is_layout_noise'))]
+            + [c for c in claims if c.get('is_layout_noise') is True]
+            + [c for c in claims if not (isinstance(c.get('model_tags'), list) and c.get('model_tags')) and not c.get('is_layout_noise')]
+        )
+        for c in ordered[:50]:
             rid = c.get("id")
             kind = c.get("kind")
             text = c.get("text") or c.get("normalized_text") or ""

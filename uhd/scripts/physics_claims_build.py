@@ -32,6 +32,8 @@ class Claim:
     text: str
     normalized_text: str
     source_span: Tuple[int, int]
+    is_layout_noise: bool
+    layout_tags: List[str]
 
 
 def utc_now_iso() -> str:
@@ -79,7 +81,35 @@ def iter_claims(lines: Iterable[str], max_lines: int) -> Iterable[Claim]:
         norm = normalize(txt)
         cid = hashlib.sha256(norm.encode("utf-8")).hexdigest()
         kind = classify(txt)
-        yield Claim(id=cid, kind=kind, text=txt, normalized_text=norm, source_span=(i, i))
+        # layout/noise heuristics (deterministic, conservative)
+        layout_tags: List[str] = []
+        # empty normalized
+        if not norm:
+            layout_tags.append("layout:empty")
+        # short content
+        if norm and len(norm) < 5:
+            layout_tags.append("layout:short")
+        # mostly non-alphanumeric
+        ns = ''.join(ch for ch in txt if not ch.isspace())
+        if ns:
+            alnum = sum(ch.isalnum() for ch in ns)
+            if alnum / max(1, len(ns)) < 0.3:
+                layout_tags.append("layout:nonalnum-heavy")
+        # pdf glyphs / zero-width
+        suspicious = ['\u200b', '\u200c', '\ufeff', '•', '·', '▪', '—', '–', '□']
+        glyph_hits = sum(txt.count(x) for x in suspicious)
+        if glyph_hits >= 2:
+            layout_tags.append("layout:glyphs")
+        is_noise = bool(layout_tags)
+        yield Claim(
+            id=cid,
+            kind=kind,
+            text=txt,
+            normalized_text=norm,
+            source_span=(i, i),
+            is_layout_noise=is_noise,
+            layout_tags=sorted(set(layout_tags)),
+        )
 
 
 def write_jsonl(path: str, claims: Iterable[Claim]) -> int:
@@ -93,6 +123,8 @@ def write_jsonl(path: str, claims: Iterable[Claim]) -> int:
                 "text": c.text,
                 "normalized_text": c.normalized_text,
                 "source_span": list(c.source_span),
+                "is_layout_noise": c.is_layout_noise,
+                "layout_tags": c.layout_tags,
             }
             f.write(json.dumps(obj, ensure_ascii=False) + "\n")
             count += 1
