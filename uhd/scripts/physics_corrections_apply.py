@@ -24,7 +24,8 @@ RULE_ORDER = [
     ("uhd/spec/physics_corrections/CCR_Core_Axioms_v1.json", "CCR.v1"),
     ("uhd/spec/physics_corrections/QPhiD_Rules_v1.json", "QPhiD.v1"),
     ("uhd/spec/physics_corrections/QGC_Rules_v1.json", "QGC.v1"),
-    ("uhd/spec/physics_corrections/AngleClock_Model_v1.json", "AngleClock.v1"),
+    # AngleClock: switch from model placeholder to first-class ruleset
+    ("uhd/spec/physics_corrections/AngleClock_Rules_v1.json", "AngleClock.v1"),
     ("uhd/spec/physics_corrections/QGG_Rules_v1.json", "QGG.v1"),
     ("uhd/spec/physics_corrections/QGL_Rules_v1.json", "QGL.v1"),
 ]

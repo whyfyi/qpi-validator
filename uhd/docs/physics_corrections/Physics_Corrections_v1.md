@@ -57,6 +57,11 @@ Rules may use a match-object with these keys in addition to plain substring list
 
 All matching is deterministic and side-effect free. Noise (`is_layout_noise`) is quarantined and not passed through physics rulesets.
 
+## AngleClock ruleset
+AngleClock is now first-class as `AngleClock.v1` (file: `uhd/spec/physics_corrections/AngleClock_Rules_v1.json`).
+It tags explicit AngleClock phrases (e.g., “AngleClock”, “angle clock”, “phase mapping”, “angle‑phase”, “map angle to time step”).
+Tags use the `AngleClock:*` prefix such as `AngleClock:phase_mapping`, `AngleClock:angle_phase`, `AngleClock:time_step`, and `AngleClock:clock_model`.
+
 To add a rule
 1. Pick a unique `id` and add a descriptive `name` and `statement`.
 2. Add one or more `match` substrings.

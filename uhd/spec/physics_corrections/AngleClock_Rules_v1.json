@@ -1,0 +1,107 @@
+{
+  "as_above": {
+    "version": "1.0.0",
+    "ruleset_id": "AngleClock.v1",
+    "purpose": "AngleClock tagging rules — deterministic, conservative matches for explicit AngleClock phase mapping language.",
+    "nonnegotiables": [
+      "Tracked rules only",
+      "No external network access",
+      "Deterministic outputs"
+    ],
+    "rule_format": "claim_substring_ci_v1 + feature match object",
+    "rules": [
+      {
+        "id": "AC-001",
+        "name": "AngleClock name",
+        "statement": "Tag explicit AngleClock mentions",
+        "match": { "any_substrings": ["angleclock", "angle clock"] },
+        "transform": {
+          "add_tags": ["AngleClock:clock_model"],
+          "recommended_rewrite": "AngleClock reference: treat as model/mapping construct (candidate)."
+        },
+        "receipt_requirements": ["hit"]
+      },
+      {
+        "id": "AC-002",
+        "name": "Phase mapping",
+        "statement": "Explicit phase mapping language",
+        "match": { "any_substrings": ["phase mapping", "clock phase mapping"] },
+        "transform": {
+          "add_tags": ["AngleClock:phase_mapping"],
+          "recommended_rewrite": "Phase mapping language: interpret as angle↔time mapping model."
+        },
+        "receipt_requirements": ["hit"]
+      },
+      {
+        "id": "AC-003",
+        "name": "Angle-phase",
+        "statement": "Angle-phase mapping wording",
+        "match": { "any_substrings": ["angle-phase"] },
+        "transform": {
+          "add_tags": ["AngleClock:angle_phase"]
+        },
+        "receipt_requirements": ["hit"]
+      },
+      {
+        "id": "AC-004",
+        "name": "Angle to time step",
+        "statement": "Map angle to time step wording",
+        "match": { "any_substrings": ["map angle to time step", "angle to time step"] },
+        "transform": {
+          "add_tags": ["AngleClock:time_step"],
+          "recommended_rewrite": "Mapping angles to discrete time steps: model framing (interpretive)."
+        },
+        "receipt_requirements": ["hit"]
+      },
+      {
+        "id": "AC-005",
+        "name": "AngleClock model",
+        "statement": "Model phrasing",
+        "match": { "any_substrings": ["angleclock model"] },
+        "transform": {
+          "add_tags": ["AngleClock:clock_model"]
+        },
+        "receipt_requirements": ["hit"]
+      },
+      {
+        "id": "AC-006",
+        "name": "AngleClock phase mapping",
+        "statement": "Combined phrase",
+        "match": { "any_substrings": ["angleclock phase mapping", "angle clock phase mapping"] },
+        "transform": {
+          "add_tags": ["AngleClock:phase_mapping", "AngleClock:clock_model"]
+        },
+        "receipt_requirements": ["hit"]
+      },
+      {
+        "id": "AC-007",
+        "name": "Clock phase mapping (explicit)",
+        "statement": "Explicit clock phase mapping",
+        "match": { "any_substrings": ["clock phase mapping"] },
+        "transform": {
+          "add_tags": ["AngleClock:phase_mapping"]
+        },
+        "receipt_requirements": ["hit"]
+      },
+      {
+        "id": "AC-008",
+        "name": "AngleClock timing",
+        "statement": "Timing in AngleClock phrasing",
+        "match": { "any_substrings": ["angleclock timing", "angle clock timing"] },
+        "transform": {
+          "add_tags": ["AngleClock:time_step"]
+        },
+        "receipt_requirements": ["hit"]
+      }
+    ]
+  },
+  "so_below": {
+    "version": "v1",
+    "purpose_human": "AngleClock deterministic tagging rules (starter set) for explicit phase mapping language.",
+    "ux_notes": [
+      "Prefer precise phrases over generic 'angle', 'phase', or 'clock' to avoid over-tagging.",
+      "This is an interpretive/model mapping ruleset; not a claim of empirical proof."
+    ]
+  }
+}
+
