@@ -1,12 +1,26 @@
 {
   "as_above": {
     "version": "1.0.0",
-    "purpose": "QPhiD Rules placeholder.",
-    "nonnegotiables": ["No external network access", "Tracked rule file"]
+    "ruleset_id": "QPhiD.v1",
+    "purpose": "Quantum Phi Dynamics — phi/golden ratio/resonance/harmonics/phase-lock starter rules (deterministic, conservative).",
+    "nonnegotiables": ["No external network access", "Tracked rule file"],
+    "rule_format": "claim_substring_ci_v1 + feature match object",
+    "rules": [
+      {"id": "QPHID-001", "name": "phi/φ mentions", "statement": "phi/golden ratio", "match": {"any_substrings": ["golden ratio", "golden mean"], "any_symbols": ["φ"], "any_constants": ["phi", "π"]}, "transform": {"add_tags": ["QPhiD:phi"]}, "receipt_requirements": ["hit"]},
+      {"id": "QPHID-002", "name": "resonance", "statement": "resonance mentions", "match": ["resonance"], "transform": {"add_tags": ["QPhiD:resonance"]}, "receipt_requirements": ["hit"]},
+      {"id": "QPHID-003", "name": "harmonics", "statement": "harmonics mentions", "match": ["harmonic", "harmonics"], "transform": {"add_tags": ["QPhiD:harmonics"]}, "receipt_requirements": ["hit"]},
+      {"id": "QPHID-004", "name": "phase locking", "statement": "phase lock/locking", "match": {"any_substrings": ["phase lock", "phase-locked", "phase locking"]}, "transform": {"add_tags": ["QPhiD:phase"]}, "receipt_requirements": ["hit"]},
+      {"id": "QPHID-005", "name": "tau/π relations", "statement": "tau/pi constants", "match": {"any_constants": ["tau", "pi", "π"]}, "transform": {"add_tags": ["QPhiD:phi"], "recommended_rewrite": "Constants relations: frame as symmetry/magnitude relations (candidate)."}, "receipt_requirements": ["hit"]},
+      {"id": "QPHID-006", "name": "modular phrasing", "statement": "mod N mentions", "match": {"any_moduli": ["mod 6", "mod 30"]}, "transform": {"add_tags": ["QPhiD:mod"]}, "receipt_requirements": ["hit"]},
+      {"id": "QPHID-007", "name": "oscillation language", "statement": "oscillation/period", "match": {"any_substrings": ["oscillation", "oscillatory", "period", "periodic"]}, "transform": {"add_tags": ["QPhiD:oscillation"]}, "receipt_requirements": ["hit"]},
+      {"id": "QPHID-008", "name": "phase terms", "statement": "phase/phase shift", "match": {"any_substrings": ["phase", "phase shift"]}, "transform": {"add_tags": ["QPhiD:phase"]}, "receipt_requirements": ["hit"]},
+      {"id": "QPHID-009", "name": "e/exp growth", "statement": "e/exp", "match": {"any_substrings": ["exponential", "exp("], "any_constants": ["e"]}, "transform": {"add_tags": ["QPhiD:exp"]}, "receipt_requirements": ["hit"]},
+      {"id": "QPHID-010", "name": "frequency pairs", "statement": "frequency & Hz", "match": {"any_substrings": ["frequency"], "any_units": ["Hz"]}, "transform": {"add_tags": ["QPhiD:frequency"]}, "receipt_requirements": ["hit"]}
+    ]
   },
   "so_below": {
     "version": "v1",
-    "purpose_human": "QPhiD correction rules live here; scaffold only.",
-    "notes": ["placeholder"]
+    "purpose_human": "QPhiD correction rules (starter set).",
+    "notes": ["Deterministic; conservative substrings and features."]
   }
 }

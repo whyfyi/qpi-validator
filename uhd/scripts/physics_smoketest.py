@@ -16,6 +16,7 @@ import tempfile
 
 FIXTURE = "uhd/fixtures/physics_claims_synthetic.jsonl"
 FIXTURE_NOISY = "uhd/fixtures/physics_claims_noisy_synthetic.jsonl"
+FIXTURE_EXT = "uhd/fixtures/physics_claims_ccr_qgc_qphid_synthetic.jsonl"
 APPLY = ["python3", "uhd/scripts/physics_corrections_apply.py"]
 OUT = "uhd/receipts/physics_corrections/corrections.latest.jsonl"
 REPORT = ["python3", "uhd/scripts/physics_corrections_report.py"]
@@ -129,6 +130,30 @@ def main() -> int:
             raise SystemExit(f"missing section in report: {h}")
     if ("T" in md and "Z" in md) or "+00:00" in md:
         raise SystemExit("report appears to contain timestamps")
+    # Extended fixture checks: determinism and ruleset coverage
+    first_ext = run_once(FIXTURE_EXT)
+    second_ext = run_once(FIXTURE_EXT)
+    if first_ext != second_ext:
+        raise SystemExit("outputs differ between runs (extended)")
+    # Parse and assert coverage
+    with open(OUT, "r", encoding="utf-8") as f:
+        objs_ext = [json.loads(ln) for ln in f if ln.strip()]
+    def has_ruleset(rsid: str) -> bool:
+        return any(any(h.get("ruleset_id") == rsid for h in o.get("rule_hits") or []) for o in objs_ext)
+    if not has_ruleset("CCR_CORE_AXIOMS_V1") and not has_ruleset("CCR.v1"):
+        # Allow either id, depending on CCR rules structure
+        raise SystemExit("expected at least one CCR ruleset hit in extended fixture")
+    if not has_ruleset("QGC.v1"):
+        raise SystemExit("expected at least one QGC ruleset hit in extended fixture")
+    if not has_ruleset("QPhiD.v1"):
+        raise SystemExit("expected at least one QPhiD ruleset hit in extended fixture")
+    # Additional precision checks on extended fixture reusable negatives
+    neg_a = next((o for o in objs_ext if o.get("id") == "c21"), None)  # mass 5 kg
+    neg_b = next((o for o in objs_ext if o.get("id") == "c22"), None)  # x = v t
+    if neg_a and ("QGG:curvature" in set(neg_a.get("model_tags") or []) or "QGC:curvature" in set(neg_a.get("model_tags") or [])):
+        raise SystemExit("extended precision: 'kg' line incorrectly tagged curvature")
+    if neg_b and ("QGL:wave" in set(neg_b.get("model_tags") or []) or "QGL:standing_wave" in set(neg_b.get("model_tags") or [])):
+        raise SystemExit("extended precision: simple equation incorrectly tagged wave")
     print("SMOKETEST OK")
     return 0
 

@@ -37,6 +37,9 @@ class Claim:
     extracted_symbols: List[str]
     extracted_units: List[str]
     extracted_equations: List[str]
+    extracted_constants: List[str]
+    extracted_moduli: List[str]
+    extracted_ops: List[str]
 
 
 def utc_now_iso() -> str:
@@ -145,6 +148,63 @@ def iter_claims(lines: Iterable[str], max_lines: int) -> Iterable[Claim]:
             if 1 <= len(snippet) <= 60:
                 eq_hits.append(snippet)
         eq_hits = sorted(set(eq_hits))
+
+        # constants: conservative word-boundary for latin tokens; direct symbol checks for unicode
+        def extract_constants(text_raw: str) -> List[str]:
+            hits = set()
+            # unicode symbols direct
+            for sym in ["π", "φ", "τ", "ℏ", "ħ"]:
+                if sym in text_raw:
+                    hits.add(sym)
+            # latin tokens with word boundaries
+            latin_specs = [
+                (r"(?i)(?<![A-Za-z0-9_])pi(?![A-Za-z0-9_])", "pi"),
+                (r"(?i)(?<![A-Za-z0-9_])phi(?![A-Za-z0-9_])", "phi"),
+                (r"(?i)(?<![A-Za-z0-9_])tau(?![A-Za-z0-9_])", "tau"),
+                (r"(?<![A-Za-z0-9_])e(?![A-Za-z0-9_])", "e"),
+                (r"(?<![A-Za-z0-9_])c(?![A-Za-z0-9_])", "c"),
+                (r"(?<![A-Za-z0-9_])G(?![A-Za-z0-9_])", "G"),
+                (r"(?<![A-Za-z0-9_])h(?![A-Za-z0-9_])", "h"),
+            ]
+            for pat, canon in latin_specs:
+                if re.search(pat, text_raw):
+                    hits.add(canon)
+            return sorted(hits)
+
+        const_hits = extract_constants(txt)
+
+        # moduli: detect canonical 'mod N'
+        def extract_moduli(text_raw: str) -> List[str]:
+            hits = set()
+            for m in re.finditer(r"(?i)\bmod\s*(\d{1,4})\b", text_raw):
+                hits.add(f"mod {m.group(1)}")
+            for m in re.finditer(r"≡\s*\(\s*mod\s*(\d{1,4})\s*\)", text_raw):
+                hits.add(f"mod {m.group(1)}")
+            # percent-operator style modulo (conservative: percent as its own token)
+            for m in re.finditer(r"(?<!\S)%\s*(\d{1,4})\b", text_raw):
+                hits.add(f"mod {m.group(1)}")
+            return sorted(hits)
+
+        mod_hits = extract_moduli(txt)
+
+        # ops: calculus/geometry operators (canonical tokens)
+        def extract_ops(text_raw: str) -> List[str]:
+            ops = set()
+            if "∫" in text_raw:
+                ops.add("integral")
+            if "∑" in text_raw:
+                ops.add("sum")
+            if "Δ" in text_raw:
+                ops.add("delta")
+            if "∂" in text_raw:
+                ops.add("partial")
+            if "∇" in text_raw:
+                ops.add("nabla")
+            if re.search(r"d\s*/\s*d\s*[a-zA-Z]", text_raw):
+                ops.add("derivative")
+            return sorted(ops)
+
+        op_hits = extract_ops(txt)
         yield Claim(
             id=cid,
             kind=kind,
@@ -156,6 +216,9 @@ def iter_claims(lines: Iterable[str], max_lines: int) -> Iterable[Claim]:
             extracted_symbols=sym_hits,
             extracted_units=unit_hits,
             extracted_equations=eq_hits,
+            extracted_constants=const_hits,
+            extracted_moduli=mod_hits,
+            extracted_ops=op_hits,
         )
 
 
@@ -175,6 +238,9 @@ def write_jsonl(path: str, claims: Iterable[Claim]) -> int:
                 "extracted_symbols": c.extracted_symbols,
                 "extracted_units": c.extracted_units,
                 "extracted_equations": c.extracted_equations,
+                "extracted_constants": c.extracted_constants,
+                "extracted_moduli": c.extracted_moduli,
+                "extracted_ops": c.extracted_ops,
             }
             f.write(json.dumps(obj, ensure_ascii=False) + "\n")
             count += 1

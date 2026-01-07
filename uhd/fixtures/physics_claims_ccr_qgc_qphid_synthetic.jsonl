@@ -1,0 +1,40 @@
+{"id":"c1","kind":"equation","text":"d/dt x(t) = v(t)"}
+{"id":"c2","kind":"equation","text":"∫ f(x) dx equals the area under the curve."}
+{"id":"c3","kind":"definition","text":"The gradient ∇φ points in the direction of maximum increase."}
+{"id":"c4","kind":"definition","text":"The Laplacian Δf measures divergence of the gradient."}
+{"id":"c5","kind":"definition","text":"A Taylor series sums terms to approximate a function."}
+{"id":"c6","kind":"definition","text":"The limit as x→0 defines continuity."}
+{"id":"c7","kind":"definition","text":"Curvature of spacetime guides geodesic motion."}
+{"id":"c8","kind":"definition","text":"The metric defines distances via the line element ds^2."}
+{"id":"c9","kind":"definition","text":"The Einstein field equations relate curvature and stress-energy."}
+{"id":"c10","kind":"definition","text":"Ricci tensor contracts the Riemann curvature."}
+{"id":"c11","kind":"definition","text":"A coordinate frame specifies axes for measurements."}
+{"id":"c12","kind":"definition","text":"Geodesics are locally length-minimizing curves."}
+{"id":"c13","kind":"definition","text":"Golden ratio φ relates successive magnitudes in a spiral model."}
+{"id":"c14","kind":"definition","text":"Resonance occurs when a system is driven near its natural frequency (Hz)."}
+{"id":"c15","kind":"definition","text":"Harmonics structure standing wave patterns."}
+{"id":"c16","kind":"definition","text":"Phase locking synchronizes oscillators."}
+{"id":"c17","kind":"equation","text":"E = h f connects energy and frequency."}
+{"id":"c18","kind":"definition","text":"Tau τ equals 2π in some conventions."}
+{"id":"c19","kind":"definition","text":"Mod 6 arithmetic classifies remainders."}
+{"id":"c20","kind":"note","text":"AngleClock phase mapping aligns angles with time steps."}
+{"id":"c21","kind":"note","text":"The mass is 5 kg."}
+{"id":"c22","kind":"equation","text":"x = v t"}
+{"id":"c23","kind":"definition","text":"Tensor calculus manipulates rank-2 objects."}
+{"id":"c24","kind":"definition","text":"Connection (Christoffel symbols) defines parallel transport."}
+{"id":"c25","kind":"definition","text":"General relativity models gravity as geometry."}
+{"id":"c26","kind":"definition","text":"Oscillation and period describe cyclic behavior."}
+{"id":"c27","kind":"definition","text":"Exponential growth exp(t) uses base e."}
+{"id":"c28","kind":"definition","text":"Wavelength λ times frequency equals wave speed."}
+{"id":"c29","kind":"definition","text":"A series ∑ a_n may converge."}
+{"id":"c30","kind":"definition","text":"Partial derivative ∂f/∂x holds other variables fixed."}
+{"id":"c31","kind":"definition","text":"Nabla ∇ operates as a vector differential operator."}
+{"id":"c32","kind":"definition","text":"Curved spacetime replaces gravitational force in GR."}
+{"id":"c33","kind":"definition","text":"Phi symmetry is sometimes cited in pattern models."}
+{"id":"c34","kind":"definition","text":"A line element ds2 can represent ds^2 in plain text."}
+{"id":"c35","kind":"definition","text":"A metric tensor defines distances and angles."}
+{"id":"c36","kind":"note","text":"Standing wave patterns appear at resonance."}
+{"id":"c37","kind":"definition","text":"Series expansions approximate functions near a point."}
+{"id":"c38","kind":"note","text":"Coordinate transformations change components but not tensors."}
+{"id":"c39","kind":"definition","text":"Mod 30 arithmetic is used in calendar cycles."}
+{"id":"c40","kind":"definition","text":"Pi π appears in many periodic phenomena."}

@@ -11,7 +11,7 @@
     ],
     "rule_format": {
       "required_fields": ["id", "name", "statement", "match", "transform", "receipt_requirements"],
-      "match_semantics": "case-insensitive substring match over claim_text",
+      "match_semantics": "case-insensitive substring over claim_text or feature keys",
       "ordering": "sort by rule id ascending"
     },
     "rules": [
@@ -20,7 +20,7 @@
         "name": "Dimensional consistency is non-negotiable",
         "statement": "Any quantitative claim or equation must be dimensionally consistent; otherwise it is invalid until repaired.",
         "match": {
-          "any_keywords": ["dimension", "dimensional", "units", "unit analysis", "dimensional analysis"]
+          "any_substrings": ["dimension", "dimensional", "units", "unit analysis", "dimensional analysis"]
         },
         "transform": {
           "action": "annotate_only",
@@ -36,7 +36,7 @@
         "name": "Definitions before derivations",
         "statement": "A symbol must be defined (units, meaning, scope) before it can be used in a derivation or law.",
         "match": {
-          "any_keywords": ["define", "definition", "let x", "where", "denote"]
+          "any_substrings": ["define", "definition", "let x", "where", "denote"]
         },
         "transform": {
           "action": "annotate_only",
@@ -52,7 +52,7 @@
         "name": "Conservation claims require boundary conditions",
         "statement": "Any conservation statement must specify system boundaries and assumptions (closed/open, external work, dissipation).",
         "match": {
-          "any_keywords": ["conserve", "conservation", "isolated system", "closed system", "energy is conserved"]
+          "any_substrings": ["conserve", "conservation", "isolated system", "closed system", "energy is conserved"]
         },
         "transform": {
           "action": "annotate_only",
@@ -68,7 +68,7 @@
         "name": "CCR placeholders for QPhiD/QGC/AngleClock integration",
         "statement": "This rule marks claims that appear to touch QPhiD/QGC/AngleClock vocabulary. Replace with your canonical CCR/QPhiD/QGC rules as you encode them.",
         "match": {
-          "any_keywords": ["phi", "qphid", "quantum phi", "qgc", "angle clock", "harmonic lattice", "uqhd"]
+          "any_substrings": ["phi", "qphid", "quantum phi", "qgc", "angle clock", "harmonic lattice", "uqhd"]
         },
         "transform": {
           "action": "annotate_only",

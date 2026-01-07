@@ -45,6 +45,18 @@ writes local-only outputs under `uhd/receipts/physics_corrections/` (ignored by 
 - Each rule: `id`, `name`, `statement`, `match` (case-insensitive substring over claim_text), `transform` (with `add_tags` list and optional `recommended_rewrite`), and `receipt_requirements` (non-empty list).
 - Current tracked rulesets: `QGG_Rules_v1.json` and `QGL_Rules_v1.json`.
 
+## Extended match object keys
+Rules may use a match-object with these keys in addition to plain substring lists:
+- `any_substrings`: case-insensitive substring over claim text
+- `any_symbols`: exact token match against `extracted_symbols`
+- `any_units`: case-insensitive token match against `extracted_units`
+- `any_equations`: case-insensitive substring over `extracted_equations` snippets
+- `any_constants`: match against `extracted_constants` (latin tokens by case-insensitive text; unicode symbols exact)
+- `any_moduli`: case-insensitive token match against `extracted_moduli`
+- `any_ops`: case-insensitive token match against `extracted_ops`
+
+All matching is deterministic and side-effect free. Noise (`is_layout_noise`) is quarantined and not passed through physics rulesets.
+
 To add a rule
 1. Pick a unique `id` and add a descriptive `name` and `statement`.
 2. Add one or more `match` substrings.

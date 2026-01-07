@@ -123,6 +123,9 @@ def apply_rules(obj: Dict[str, Any], rulesets: List[Dict[str, Any]]) -> Dict[str
     existing_symbols = _as_list(obj.get('extracted_symbols'))
     existing_units = _as_list(obj.get('extracted_units'))
     existing_equations = _as_list(obj.get('extracted_equations'))
+    existing_constants = _as_list(obj.get('extracted_constants'))
+    existing_moduli = _as_list(obj.get('extracted_moduli'))
+    existing_ops = _as_list(obj.get('extracted_ops'))
 
     SYMBOLS = [
         "λ", "ω", "θ", "Δ", "∑", "∫", "μ", "α", "β", "γ", "Ω", "η", "κ", "π", "χ", "φ", "ψ", "τ", "σ"
@@ -171,6 +174,69 @@ def apply_rules(obj: Dict[str, Any], rulesets: List[Dict[str, Any]]) -> Dict[str
     else:
         eq_hits = sorted({str(s) for s in existing_equations})
 
+    # constants (mirror builder)
+    def extract_constants(text_raw: str) -> List[str]:
+        hits = set()
+        for sym in ["π", "φ", "τ", "ℏ", "ħ"]:
+            if sym in text_raw:
+                hits.add(sym)
+        latin_specs = [
+            (r"(?i)(?<![A-Za-z0-9_])pi(?![A-Za-z0-9_])", "pi"),
+            (r"(?i)(?<![A-Za-z0-9_])phi(?![A-Za-z0-9_])", "phi"),
+            (r"(?i)(?<![A-Za-z0-9_])tau(?![A-Za-z0-9_])", "tau"),
+            (r"(?<![A-Za-z0-9_])e(?![A-Za-z0-9_])", "e"),
+            (r"(?<![A-Za-z0-9_])c(?![A-Za-z0-9_])", "c"),
+            (r"(?<![A-Za-z0-9_])G(?![A-Za-z0-9_])", "G"),
+            (r"(?<![A-Za-z0-9_])h(?![A-Za-z0-9_])", "h"),
+        ]
+        for pat, canon in latin_specs:
+            if re.search(pat, text_raw):
+                hits.add(canon)
+        return sorted(hits)
+
+    if existing_constants is None:
+        const_hits = extract_constants(text_raw)
+    else:
+        const_hits = sorted({str(s) for s in existing_constants})
+
+    # moduli (mirror builder)
+    def extract_moduli(text_raw: str) -> List[str]:
+        hits = set()
+        for m in re.finditer(r"(?i)\bmod\s*(\d{1,4})\b", text_raw):
+            hits.add(f"mod {m.group(1)}")
+        for m in re.finditer(r"≡\s*\(\s*mod\s*(\d{1,4})\s*\)", text_raw):
+            hits.add(f"mod {m.group(1)}")
+        for m in re.finditer(r"(?<!\S)%\s*(\d{1,4})\b", text_raw):
+            hits.add(f"mod {m.group(1)}")
+        return sorted(hits)
+
+    if existing_moduli is None:
+        mod_hits = extract_moduli(text_raw)
+    else:
+        mod_hits = sorted({str(s) for s in existing_moduli})
+
+    # ops (mirror builder)
+    def extract_ops(text_raw: str) -> List[str]:
+        ops = set()
+        if "∫" in text_raw:
+            ops.add("integral")
+        if "∑" in text_raw:
+            ops.add("sum")
+        if "Δ" in text_raw:
+            ops.add("delta")
+        if "∂" in text_raw:
+            ops.add("partial")
+        if "∇" in text_raw:
+            ops.add("nabla")
+        if re.search(r"d\s*/\s*d\s*[a-zA-Z]", text_raw):
+            ops.add("derivative")
+        return sorted(ops)
+
+    if existing_ops is None:
+        op_hits = extract_ops(text_raw)
+    else:
+        op_hits = sorted({str(s) for s in existing_ops})
+
     existing_layout_tags = obj.get('layout_tags') if isinstance(obj.get('layout_tags'), list) else []
     noise_flag = obj.get('is_layout_noise') if isinstance(obj.get('is_layout_noise'), bool) else None
 
@@ -215,6 +281,9 @@ def apply_rules(obj: Dict[str, Any], rulesets: List[Dict[str, Any]]) -> Dict[str
             "extracted_symbols": sym_hits,
             "extracted_units": unit_hits,
             "extracted_equations": eq_hits,
+            "extracted_constants": const_hits,
+            "extracted_moduli": mod_hits,
+            "extracted_ops": op_hits,
         }
         for k in sorted(obj.keys()):
             if k in out:
@@ -258,6 +327,42 @@ def apply_rules(obj: Dict[str, Any], rulesets: List[Dict[str, Any]]) -> Dict[str
                     eq_snips = [s.lower() for s in eq_hits]
                     if any(any(n in sn for sn in eq_snips) for n in eq_needles):
                         matched = True
+                # any_constants
+                if not matched:
+                    const_needles = {s if s in ["π","φ","τ","ℏ","ħ"] else s.lower() for s in match.get('any_constants', [])}
+                    const_hitset = {s if s in ["π","φ","τ","ℏ","ħ"] else s.lower() for s in const_hits}
+                    if const_needles & const_hitset:
+                        matched = True
+                # any_moduli
+                if not matched:
+                    mod_needles = {s.lower() for s in match.get('any_moduli', [])}
+                    mod_hitset = {s.lower() for s in mod_hits}
+                    if mod_needles & mod_hitset:
+                        matched = True
+                # any_ops
+                if not matched:
+                    op_needles = {s.lower() for s in match.get('any_ops', [])}
+                    op_hitset = {s.lower() for s in op_hits}
+                    if op_needles & op_hitset:
+                        matched = True
+                # any_constants
+                if not matched:
+                    const_needles = {s.lower() for s in match.get('any_constants', [])}
+                    const_hitset = {s if s in ["π","φ","τ","ℏ","ħ"] else s.lower() for s in const_hits}
+                    if const_needles & const_hitset:
+                        matched = True
+                # any_moduli
+                if not matched:
+                    mod_needles = {s.lower() for s in match.get('any_moduli', [])}
+                    mod_hitset = {s.lower() for s in mod_hits}
+                    if mod_needles & mod_hitset:
+                        matched = True
+                # any_ops
+                if not matched:
+                    op_needles = {s.lower() for s in match.get('any_ops', [])}
+                    op_hitset = {s.lower() for s in op_hits}
+                    if op_needles & op_hitset:
+                        matched = True
             if matched:
                 hits.append({"ruleset_id": rs_id, "rule_id": rid})
                 tags.extend(r.get('transform', {}).get('add_tags', []))
@@ -281,6 +386,9 @@ def apply_rules(obj: Dict[str, Any], rulesets: List[Dict[str, Any]]) -> Dict[str
         "extracted_symbols": sym_hits,
         "extracted_units": unit_hits,
         "extracted_equations": eq_hits,
+        "extracted_constants": const_hits,
+        "extracted_moduli": mod_hits,
+        "extracted_ops": op_hits,
     }
     # Carry over any other original keys without timestamps, in stable order
     for k in sorted(obj.keys()):
