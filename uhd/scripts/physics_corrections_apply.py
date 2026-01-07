@@ -72,7 +72,18 @@ def load_ruleset(path: str) -> Dict[str, Any]:
     # Normalize rule match to list[str]
     for r in rules:
         m = r.get('match', [])
-        if isinstance(m, str):
+        if isinstance(m, dict):
+            # normalize match object lists to list[str]
+            for k in ('any_substrings','any_symbols','any_units','any_equations'):
+                v = m.get(k)
+                if isinstance(v, str):
+                    m[k] = [v]
+                elif isinstance(v, list):
+                    m[k] = [str(x) for x in v]
+                else:
+                    m[k] = []
+            r['match'] = m
+        elif isinstance(m, str):
             r['match'] = [m]
         elif isinstance(m, list):
             r['match'] = [str(x) for x in m]
@@ -105,6 +116,43 @@ def apply_rules(obj: Dict[str, Any], rulesets: List[Dict[str, Any]]) -> Dict[str
     if not isinstance(norm, str):
         s = text_raw.strip().lower()
         norm = re.sub(r"\s+", " ", s)
+    # Ensure extracted features exist (do not overwrite if already present)
+    # symbols: curated greek/math tokens
+    def _as_list(v):
+        return v if isinstance(v, list) else None
+    existing_symbols = _as_list(obj.get('extracted_symbols'))
+    existing_units = _as_list(obj.get('extracted_units'))
+    existing_equations = _as_list(obj.get('extracted_equations'))
+
+    SYMBOLS = [
+        "λ", "ω", "θ", "Δ", "∑", "∫", "μ", "α", "β", "γ", "Ω", "η", "κ", "π", "χ", "φ", "ψ", "τ", "σ"
+    ]
+    if existing_symbols is None:
+        sym_hits = sorted({s for s in SYMBOLS if s in text_raw})
+    else:
+        sym_hits = sorted({str(s) for s in existing_symbols})
+
+    # units: curated multi-character tokens (case-insensitive)
+    unit_tokens = ["hz", "pa", "mol", "cd", "kg", "rad", "rad/s", "m/s", "m/s^2"]
+    low_txt = text_raw.lower()
+    if existing_units is None:
+        unit_hits = sorted({(u.upper() if u in {"hz", "pa"} else u) for u in unit_tokens if u in low_txt})
+    else:
+        unit_hits = sorted({str(u) for u in existing_units})
+
+    # equations: short snippets around '=' or '≈', normalized whitespace, max ~60 chars
+    if existing_equations is None:
+        eq_hits = []
+        for m in re.finditer(r"[=≈]", text_raw):
+            start = max(0, m.start() - 30)
+            end = min(len(text_raw), m.end() + 30)
+            snippet = text_raw[start:end]
+            snippet = re.sub(r"\s+", " ", snippet.strip())
+            if 1 <= len(snippet) <= 60:
+                eq_hits.append(snippet)
+        eq_hits = sorted(set(eq_hits))
+    else:
+        eq_hits = sorted({str(s) for s in existing_equations})
 
     existing_layout_tags = obj.get('layout_tags') if isinstance(obj.get('layout_tags'), list) else []
     noise_flag = obj.get('is_layout_noise') if isinstance(obj.get('is_layout_noise'), bool) else None
@@ -147,6 +195,9 @@ def apply_rules(obj: Dict[str, Any], rulesets: List[Dict[str, Any]]) -> Dict[str
             "recommended_rewrites": [],
             "is_layout_noise": True,
             "layout_tags": final_layout_tags,
+            "extracted_symbols": sym_hits,
+            "extracted_units": unit_hits,
+            "extracted_equations": eq_hits,
         }
         for k in sorted(obj.keys()):
             if k in out:
@@ -157,14 +208,45 @@ def apply_rules(obj: Dict[str, Any], rulesets: List[Dict[str, Any]]) -> Dict[str
         rs_id = rs.get('as_above', {}).get('ruleset_id') or rs.get('so_below', {}).get('version', 'unknown')
         for r in rs.get('as_above', {}).get('rules', []):
             rid = r.get('id')
-            for needle in r.get('match', []):
-                if needle.lower() in text_ci:
-                    hits.append({"ruleset_id": rs_id, "rule_id": rid})
-                    tags.extend(r.get('transform', {}).get('add_tags', []))
-                    rr = r.get('transform', {}).get('recommended_rewrite')
-                    if isinstance(rr, str) and rr.strip():
-                        recs.append(rr.strip())
-                    break
+            match = r.get('match', [])
+            matched = False
+            if isinstance(match, list):
+                for needle in match:
+                    if needle.lower() in text_ci:
+                        matched = True
+                        break
+            elif isinstance(match, dict):
+                # any_substrings
+                subs = match.get('any_substrings', [])
+                if not matched:
+                    for needle in subs:
+                        if needle.lower() in text_ci:
+                            matched = True
+                            break
+                # any_symbols
+                if not matched:
+                    sym_needles = set(match.get('any_symbols', []))
+                    sym_hitset = set(sym_hits)
+                    if sym_needles & sym_hitset:
+                        matched = True
+                # any_units
+                if not matched:
+                    unit_needles = {u.lower() for u in match.get('any_units', [])}
+                    unit_hitset = {u.lower() for u in unit_hits}
+                    if unit_needles & unit_hitset:
+                        matched = True
+                # any_equations (substring over extracted snippets)
+                if not matched:
+                    eq_needles = [s.lower() for s in match.get('any_equations', [])]
+                    eq_snips = [s.lower() for s in eq_hits]
+                    if any(any(n in sn for sn in eq_snips) for n in eq_needles):
+                        matched = True
+            if matched:
+                hits.append({"ruleset_id": rs_id, "rule_id": rid})
+                tags.extend(r.get('transform', {}).get('add_tags', []))
+                rr = r.get('transform', {}).get('recommended_rewrite')
+                if isinstance(rr, str) and rr.strip():
+                    recs.append(rr.strip())
     # Deduplicate + sort tags
     tags = sorted(set(tags))
     # Deterministic output: build in fixed key order
@@ -179,6 +261,9 @@ def apply_rules(obj: Dict[str, Any], rulesets: List[Dict[str, Any]]) -> Dict[str
         "recommended_rewrites": sorted(set(recs)),
         "is_layout_noise": False if noise_flag is None else bool(noise_flag),
         "layout_tags": existing_layout_tags if existing_layout_tags else final_layout_tags,
+        "extracted_symbols": sym_hits,
+        "extracted_units": unit_hits,
+        "extracted_equations": eq_hits,
     }
     # Carry over any other original keys without timestamps, in stable order
     for k in sorted(obj.keys()):

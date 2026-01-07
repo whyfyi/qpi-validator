@@ -152,6 +152,67 @@
         "receipt_requirements": [
           "hit"
         ]
+      },
+      {
+        "id": "QGL-009",
+        "name": "Frequency units",
+        "statement": "Match frequency-related units",
+        "match": {
+          "any_units": [
+            "Hz"
+          ],
+          "any_substrings": [
+            "frequency"
+          ]
+        },
+        "transform": {
+          "add_tags": [
+            "QGL:frequency"
+          ],
+          "recommended_rewrite": "Frequency units detected; treat as measurement context in the model."
+        },
+        "receipt_requirements": [
+          "hit"
+        ]
+      },
+      {
+        "id": "QGL-010",
+        "name": "Wave equations",
+        "statement": "Equation-like snippets for waves",
+        "match": {
+          "any_equations": [
+            "="
+          ]
+        },
+        "transform": {
+          "add_tags": [
+            "QGL:wave"
+          ],
+          "recommended_rewrite": "Equation snippet: consider wave-model framing of relation."
+        },
+        "receipt_requirements": [
+          "hit"
+        ]
+      },
+      {
+        "id": "QGL-011",
+        "name": "Phase symbols",
+        "statement": "Greek symbols for phase",
+        "match": {
+          "any_symbols": [
+            "φ",
+            "ω"
+          ]
+        },
+        "transform": {
+          "add_tags": [
+            "QGL:phase"
+          ],
+          "recommended_rewrite": "Phase/symbol reference; model framing for oscillatory behavior."
+        },
+        "receipt_requirements": [
+          "hit"
+        ]
       }
     ]
   },
