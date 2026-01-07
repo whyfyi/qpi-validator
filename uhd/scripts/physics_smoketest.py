@@ -147,6 +147,8 @@ def main() -> int:
         raise SystemExit("expected at least one QGC ruleset hit in extended fixture")
     if not has_ruleset("QPhiD.v1"):
         raise SystemExit("expected at least one QPhiD ruleset hit in extended fixture")
+    if not has_ruleset("AngleClock.v1"):
+        raise SystemExit("expected at least one AngleClock.v1 ruleset hit in extended fixture")
     # Additional precision checks on extended fixture reusable negatives
     neg_a = next((o for o in objs_ext if o.get("id") == "c21"), None)  # mass 5 kg
     neg_b = next((o for o in objs_ext if o.get("id") == "c22"), None)  # x = v t
@@ -154,6 +156,15 @@ def main() -> int:
         raise SystemExit("extended precision: 'kg' line incorrectly tagged curvature")
     if neg_b and ("QGL:wave" in set(neg_b.get("model_tags") or []) or "QGL:standing_wave" in set(neg_b.get("model_tags") or [])):
         raise SystemExit("extended precision: simple equation incorrectly tagged wave")
+    # AngleClock precision negatives
+    neg_c = next((o for o in objs_ext if o.get("id") == "c43"), None)
+    neg_d = next((o for o in objs_ext if o.get("id") == "c44"), None)
+    neg_e = next((o for o in objs_ext if o.get("id") == "c45"), None)
+    def has_ac_tag(o) -> bool:
+        return any(str(t).startswith("AngleClock:") for t in (o.get("model_tags") or []))
+    for nid, obj in [("c43", neg_c), ("c44", neg_d), ("c45", neg_e)]:
+        if obj and has_ac_tag(obj):
+            raise SystemExit(f"AngleClock precision: {nid} incorrectly tagged AngleClock:*")
     print("SMOKETEST OK")
     return 0
 

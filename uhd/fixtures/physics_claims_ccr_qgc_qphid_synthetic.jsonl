@@ -38,3 +38,8 @@
 {"id":"c38","kind":"note","text":"Coordinate transformations change components but not tensors."}
 {"id":"c39","kind":"definition","text":"Mod 30 arithmetic is used in calendar cycles."}
 {"id":"c40","kind":"definition","text":"Pi π appears in many periodic phenomena."}
+{"id":"c41","kind":"note","text":"AngleClock phase mapping aligns angle with a time step."}
+{"id":"c42","kind":"note","text":"The Angle Clock model uses angle-phase mapping for timing."}
+{"id":"c43","kind":"definition","text":"The angle of a triangle sums to 180 degrees."}
+{"id":"c44","kind":"definition","text":"A wall clock measures time."}
+{"id":"c45","kind":"note","text":"Phase shift changes interference patterns."}
