@@ -177,22 +177,20 @@
       },
       {
         "id": "QGL-010",
-        "name": "Wave equations",
-        "statement": "Equation-like snippets for waves",
-        "match": {
-          "any_equations": [
-            "="
-          ]
-        },
+        "name": "Canonical wave equations",
+        "statement": "Match canonical wave/optics equations only (conservative)",
+        "match": { "any_equations": [
+          "e = h f",
+          "v = f λ",
+          "c = λ f",
+          "ω = 2π f",
+          "k = 2π / λ"
+        ] },
         "transform": {
-          "add_tags": [
-            "QGL:wave"
-          ],
-          "recommended_rewrite": "Equation snippet: consider wave-model framing of relation."
+          "add_tags": ["QGL:wave"],
+          "recommended_rewrite": "Equation with wave/optics context: treat as wave-model framing candidate."
         },
-        "receipt_requirements": [
-          "hit"
-        ]
+        "receipt_requirements": ["hit"]
       },
       {
         "id": "QGL-011",

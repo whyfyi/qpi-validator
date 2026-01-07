@@ -132,11 +132,28 @@ def apply_rules(obj: Dict[str, Any], rulesets: List[Dict[str, Any]]) -> Dict[str
     else:
         sym_hits = sorted({str(s) for s in existing_symbols})
 
-    # units: curated multi-character tokens (case-insensitive)
-    unit_tokens = ["hz", "pa", "mol", "cd", "kg", "rad", "rad/s", "m/s", "m/s^2"]
-    low_txt = text_raw.lower()
+    # units: conservative regex boundary matching (mirror claims builder)
+    def extract_units(text_raw: str) -> List[str]:
+        t = text_raw
+        hits = set()
+        patterns = [
+            (r"(?<![A-Za-z0-9])kg(?![A-Za-z0-9])", "kg", 0),
+            (r"(?<![A-Za-z0-9])mol(?![A-Za-z0-9])", "mol", 0),
+            (r"(?<![A-Za-z0-9])cd(?![A-Za-z0-9])", "cd", 0),
+            (r"(?<![A-Za-z0-9])rad/s(?![A-Za-z0-9])", "rad/s", re.IGNORECASE),
+            (r"(?<![A-Za-z0-9])rad(?![A-Za-z0-9])", "rad", re.IGNORECASE),
+            (r"(?<![A-Za-z0-9])m/s\^2(?![A-Za-z0-9])", "m/s^2", 0),
+            (r"(?<![A-Za-z0-9])m/s(?![A-Za-z0-9])", "m/s", 0),
+            (r"(?<![A-Za-z0-9])hz(?![A-Za-z0-9])", "Hz", re.IGNORECASE),
+            (r"(?<![A-Za-z0-9])pa(?![A-Za-z0-9])", "Pa", re.IGNORECASE),
+        ]
+        for pat, canon, flags in patterns:
+            if re.search(pat, t, flags):
+                hits.add(canon)
+        return sorted(hits)
+
     if existing_units is None:
-        unit_hits = sorted({(u.upper() if u in {"hz", "pa"} else u) for u in unit_tokens if u in low_txt})
+        unit_hits = extract_units(text_raw)
     else:
         unit_hits = sorted({str(u) for u in existing_units})
 

@@ -152,18 +152,18 @@
       },
       {
         "id": "QGG-009",
-        "name": "GR equation features",
-        "statement": "Match curvature/Einstein-like equations",
-        "match": { "any_equations": ["="], "any_symbols": ["Δ"], "any_units": ["kg"] },
-        "transform": { "add_tags": ["QGG:curvature"], "recommended_rewrite": "Equation-like snippet; treat as geometry/dynamics candidate mapping." },
+        "name": "GR curvature context",
+        "statement": "Curvature/GR phrases (semantic)",
+        "match": { "any_substrings": ["spacetime", "curvature", "geodesic", "einstein", "relativity", "metric", "tensor", "general relativity"] },
+        "transform": { "add_tags": ["QGG:curvature"], "recommended_rewrite": "Curvature/GR context: treat as candidate geometric framing of gravitation." },
         "receipt_requirements": ["hit"]
       },
       {
         "id": "QGG-010",
-        "name": "Curved spacetime/geodesic phrases",
-        "statement": "Substring features for curved spacetime/geodesics",
+        "name": "Curved spacetime/geodesic",
+        "statement": "Curved spacetime/geodesic phrases",
         "match": { "any_substrings": ["curved spacetime", "geodesic"] },
-        "transform": { "add_tags": ["QGG:geometry"], "recommended_rewrite": "Geometry phrasing: treat as model framing for gravitational motion." },
+        "transform": { "add_tags": ["QGG:geometry"], "recommended_rewrite": "Geometry phrasing: model framing for gravitational motion (hypothesis)." },
         "receipt_requirements": ["hit"]
       },
       {

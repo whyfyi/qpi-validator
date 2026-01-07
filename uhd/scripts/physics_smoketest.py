@@ -98,6 +98,20 @@ def main() -> int:
     n = count_noise()
     if n < 3:
         raise SystemExit(f"expected at least 3 noise lines, got {n}")
+    # Precision checks: ensure certain noisy lines do not over-tag
+    def read_out() -> list:
+        with open(OUT, "r", encoding="utf-8") as f:
+            return [json.loads(ln) for ln in f if ln.strip()]
+    objs = read_out()
+    precA = next((o for o in objs if o.get("id") == "n16"), None)
+    precB = next((o for o in objs if o.get("id") == "n17"), None)
+    if not precA or not precB:
+        raise SystemExit("precision asserts: fixture lines n16/n17 not found")
+    if "QGG:curvature" in set(precA.get("model_tags") or []):
+        raise SystemExit("precision A incorrectly tagged QGG:curvature for 'kg' line")
+    tagsB = set(precB.get("model_tags") or [])
+    if "QGL:wave" in tagsB or "QGL:standing_wave" in tagsB:
+        raise SystemExit("precision B incorrectly tagged QGL:wave for simple equation")
     # Report exists and sections present, and no timestamps inside MD
     run_report()
     if not os.path.exists(REPORT_MD):
